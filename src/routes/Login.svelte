@@ -13,7 +13,7 @@
     import axios from 'axios'
     import { push } from 'svelte-spa-router'
     import { stringify } from 'query-string'
-    import { userInfo } from '../stores/userInfo'
+    import { stayLoggedIn, userInfo } from '../stores'
 
     const { VITE_API_URL } = import.meta.env
 
@@ -83,7 +83,7 @@
                 <PasswordInput labelText="Mot de passe" bind:value={password} />
             </div>
             <div class="spacing bottom-margin">
-                <Checkbox labelText="Rester connecté" />
+                <Checkbox labelText="Rester connecté" bind:checked={$stayLoggedIn} />
             </div>
             
             <Button icon={LoginIcon} on:click={login}>Connexion</Button>

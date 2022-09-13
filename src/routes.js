@@ -4,7 +4,7 @@ import Tasks from './routes/Tasks.svelte'
 import Stats from './routes/Stats.svelte'
 import CatchAll from './routes/CatchAll.svelte'
 
-import { userInfo } from './stores/userInfo.js'
+import { userInfo } from './stores'
 import { get } from 'svelte/store'
 import { wrap } from 'svelte-spa-router/wrap'
 

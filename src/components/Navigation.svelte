@@ -19,7 +19,7 @@
 
     import { get } from 'svelte/store'
     import { location, push } from 'svelte-spa-router'
-    import { userInfo } from '../stores/userInfo'
+    import { stayLoggedIn, userInfo } from '../stores'
 
     let isSideNavOpen = false
     let isProfileOpen = false
@@ -49,7 +49,6 @@
     </HeaderNav>
     <HeaderUtilities>
         <HeaderAction icon={UserAvatarFilledAltIcon} closeIcon={UserAvatarFilledAltIcon} bind:isOpen={isProfileOpen} text="{$userInfo?.firstName} {$userInfo?.lastName}">
-            
             <HeaderPanelLinks>
                 <li>
                     <div class="profile-summary">
