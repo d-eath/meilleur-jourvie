@@ -44,7 +44,6 @@
             return
         }
 
-        console.log(loginReq.data)
         userInfo.set({
             lastName: loginReq.data.Nom,
             firstName: loginReq.data.Prenom,
@@ -77,10 +76,10 @@
             {/if}
     
             <div class="spacing">
-                <TextInput labelText="Matricule" placeholder="0000000" bind:value={username} />
+                <TextInput labelText="Matricule" placeholder="0000000" bind:value={username} on:keydown={e => { if (e.key === 'Enter') login() }} />
             </div>
             <div class="spacing">
-                <PasswordInput labelText="Mot de passe" bind:value={password} />
+                <PasswordInput labelText="Mot de passe" bind:value={password} on:keydown={e => { if (e.key === 'Enter') login() }} />
             </div>
             <div class="spacing bottom-margin">
                 <Checkbox labelText="Rester connecté" bind:checked={$stayLoggedIn} />
