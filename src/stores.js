@@ -8,6 +8,7 @@ stayLoggedIn.subscribe(value => localStorage.setItem('meilleurJourvie.stayLogged
 // Store: userInfo
 let storage = sessionStorage
 let otherStorage = localStorage
+let firstTime = true
 
 stayLoggedIn.subscribe(value => {
     if (value) {
@@ -18,8 +19,13 @@ stayLoggedIn.subscribe(value => {
         otherStorage = localStorage
     }
     
-    storage.setItem('meilleurJourvie.userInfo', otherStorage.getItem('meilleurJourvie.userInfo') || '{}')
-    otherStorage.removeItem('meilleurJourvie.userInfo')
+    if (!firstTime) {
+        storage.setItem('meilleurJourvie.userInfo', otherStorage.getItem('meilleurJourvie.userInfo') || '{}')
+        otherStorage.removeItem('meilleurJourvie.userInfo')
+    } else {
+        firstTime = false
+    }
+    
 })
 
 export const userInfo = writable(JSON.parse(storage.getItem('meilleurJourvie.userInfo')) || {})
