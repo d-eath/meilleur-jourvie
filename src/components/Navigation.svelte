@@ -32,6 +32,7 @@
         // avoid guard redirect by deleting loginToken
         delete currentUserInfo.loginToken
         userInfo.set(currentUserInfo)
+        stayLoggedIn.set(false)
 
         // avoid "undefined" world with a delay
         setTimeout(() => { userInfo.set({}) }, 1000)
