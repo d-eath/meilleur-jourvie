@@ -17,13 +17,16 @@
     import ChartColumnIcon from 'carbon-icons-svelte/lib/ChartColumn.svelte'
     import UserAvatarFilledAltIcon from 'carbon-icons-svelte/lib/UserAvatarFilledAlt.svelte'
 
-    import { push } from 'svelte-spa-router'
+    import { location, push } from 'svelte-spa-router'
+    import { userInfo } from '../stores/userInfo'
 
     let isSideNavOpen = false
     let isProfileOpen = false
 
     function logout() {
         push('/login')
+
+        userInfo.set({})
     }
 </script>
 
@@ -31,12 +34,13 @@
     <HeaderNav>
         <li role="none">
             <span class="project-header">
-                Projet: <span class="project-name">SYSTICK</span>
+                Projet: <span class="project-name">{$userInfo?.projectName}</span>
             </span>
         </li>
     </HeaderNav>
     <HeaderUtilities>
-        <HeaderAction icon={UserAvatarFilledAltIcon} closeIcon={UserAvatarFilledAltIcon} bind:isOpen={isProfileOpen} text="Davis Eath">
+        <HeaderAction icon={UserAvatarFilledAltIcon} closeIcon={UserAvatarFilledAltIcon} bind:isOpen={isProfileOpen} text="{$userInfo?.firstName} {$userInfo?.lastName}">
+            
             <HeaderPanelLinks>
                 <li>
                     <div class="profile-summary">
@@ -44,15 +48,15 @@
                             <UserAvatarFilledAltIcon size={32} />
                         </div>
                         <div class="profile-summary-name">
-                            Davis Eath
+                            {$userInfo?.firstName} {$userInfo?.lastName}
                         </div>
                         <div class="profile-summary-role">
-                            Développeur
+                            {$userInfo?.isCoordinator ? 'Coordinateur' : 'Développeur'}
                         </div>
                     </div>
                 </li>
                 <HeaderPanelDivider />
-                <HeaderPanelLink>Déconnexion</HeaderPanelLink>
+                <HeaderPanelLink on:click={logout}>Déconnexion</HeaderPanelLink>
             </HeaderPanelLinks>
         </HeaderAction>
     </HeaderUtilities>
@@ -60,9 +64,9 @@
 
 <SideNav bind:isOpen={isSideNavOpen} rail>
     <SideNavItems>
-        <SideNavLink icon={CatalogIcon} href="#/journal" text="Journal" />
-        <SideNavLink icon={TaskIcon} href="#/tasks" text="Tâches" />
-        <SideNavLink icon={ChartColumnIcon} href="#/stats" text="Statistiques" />
+        <SideNavLink icon={CatalogIcon} href="#/journal" isSelected={$location === '/journal'} text="Journal" />
+        <SideNavLink icon={TaskIcon} href="#/tasks" isSelected={$location === '/tasks'} text="Tâches" />
+        <SideNavLink icon={ChartColumnIcon} href="#/stats" isSelected={$location === '/stats'} text="Statistiques" />
     </SideNavItems>
 </SideNav>
 

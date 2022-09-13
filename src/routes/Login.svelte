@@ -13,6 +13,7 @@
     import axios from 'axios'
     import { push } from 'svelte-spa-router'
     import { stringify } from 'query-string'
+    import { userInfo } from '../stores/userInfo'
 
     const { VITE_API_URL } = import.meta.env
 
@@ -43,6 +44,16 @@
             return
         }
 
+        console.log(loginReq.data)
+        userInfo.set({
+            lastName: loginReq.data.Nom,
+            firstName: loginReq.data.Prenom,
+            isCoordinator: loginReq.data.EstCoordo === '1',
+            projectId: loginReq.data.ProjetAssigne_Id,
+            projectName: loginReq.data.NomProjet,
+            loginToken: loginReq.data.EtatConnexion
+        })
+
         push('/journal')
     }
 </script>
@@ -69,7 +80,7 @@
                 <TextInput labelText="Matricule" placeholder="0000000" bind:value={username} />
             </div>
             <div class="spacing">
-                <PasswordInput labelText="Mot de passe" placeholder="••••••••••" bind:value={password} />
+                <PasswordInput labelText="Mot de passe" bind:value={password} />
             </div>
             <div class="spacing bottom-margin">
                 <Checkbox labelText="Rester connecté" />
