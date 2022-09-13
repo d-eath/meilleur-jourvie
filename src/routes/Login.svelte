@@ -45,12 +45,14 @@
         }
 
         userInfo.set({
+            userId: loginReq.data.Id,
             lastName: loginReq.data.Nom,
             firstName: loginReq.data.Prenom,
             isCoordinator: loginReq.data.EstCoordo === '1',
             projectId: loginReq.data.ProjetAssigne_Id,
             projectName: loginReq.data.NomProjet,
-            loginToken: loginReq.data.EtatConnexion
+            loginToken: loginReq.data.EtatConnexion,
+            sessionId: loginReq.data.SessionId
         })
 
         push('/journal')
