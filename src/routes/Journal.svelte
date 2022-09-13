@@ -24,6 +24,8 @@
 
     const { VITE_API_URL } = import.meta.env
 
+    let sessions = []
+
     const statusTooltips = {
         sessionStart: { icon: PlayIcon, text: 'Début d\'une session', color: 'green' },
         sessionEnd: { icon: StopIcon, text: 'Fin d\'une session', color: 'red' },
@@ -31,77 +33,76 @@
         file: { icon: AttachmentIcon, text: 'Fichier', color: 'gray' }
     }
 
-    let entries = []
-
     onMount(async () => {
         await getSessions()
         await getComments()
+        await getFiles()
 
-        entries.sort((x, y) => y.timestamp - x.timestamp)
-        entries = entries
+        for (const session of sessions) {
+            session.comments.sort((a, b) => b.timestamp - a.timestamp)
+            session.comments = session.comments
+        }
+
+        console.log(sessions)
     })
 
     async function getSessions() {
-        const req = await axios.get(`${VITE_API_URL}/getSessionsTravail.php?devId=${get(userInfo).userId}`)
+        const req = await axios.get(`${VITE_API_URL}/getSessionsTravail.php?devId=${get(userInfo).id}`)
 
         for (const session of req.data) {
-            entries = [...entries, {
-                type: 'sessionStart',
-                id: session.Id,
-                timestamp: new Date(session.Debut).valueOf(),
+            sessions = [...sessions, {
+                id: parseInt(session.Id),
+                timestampStart: new Date(session.Debut).valueOf(),
+                timestampEnd: new Date(session.Fin).valueOf(),
                 task: {
-                    id: session.TacheId,
+                    id: parseInt(session.TacheId),
                     number: session.TacheNumero
-                }
-            }]
-
-            entries = [...entries, {
-                type: 'sessionEnd',
-                id: session.Id,
-                timestamp: new Date(session.Fin).valueOf(),
-                task: {
-                    id: session.TacheId,
-                    number: session.TacheNumero
-                }
+                },
+                comments: []
             }]
         }
     }
 
     async function getComments() {
-        const commentsReq = await axios.post(`${VITE_API_URL}/getCommentaires.php?devId=${get(userInfo).userId}`, stringify({
-            acces: get(userInfo).loginToken,
-        }, { encode: true }), {
+        const req = await axios.post(`${VITE_API_URL}/getCommentaires.php?devId=${get(userInfo).id}`, stringify({
+            acces: get(userInfo).loginToken
+        }), {
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
             },
         })
 
-        for (const comment of commentsReq.data) {
+        for (const comment of req.data) {
+            const session = sessions.find(s => s.id === parseInt(comment.Session_Id))
 
-            entries = [...entries, {
+            session.comments = [...session.comments, {
                 type: 'comment',
-                id: comment.Id,
+                id: parseInt(comment.Id),
                 timestamp: new Date(comment.Horodateur).valueOf(),
-                sessionId: comment.Session_Id,
                 content: comment.Contenu
             }]
         }
+    }
 
-        const filesReq = await axios.post(`${VITE_API_URL}/getTeleversements.php?devId=${get(userInfo).userId}`, stringify({
-            acces: get(userInfo).loginToken,
-        }, { encode: true }), {
+    async function getFiles() {
+        const req = await axios.post(`${VITE_API_URL}/getTeleversements.php?devId=${get(userInfo).id}`, stringify({
+            acces: get(userInfo).loginToken
+        }), {
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
             },
         })
 
-        for (const file of filesReq.data) {
-            entries = [...entries, {
+        for (const file of req.data) {
+            const timestamp = new Date(file.DateTele).valueOf()
+            const session = sessions.find(s => s.timestampStart <= timestamp && s.timestampEnd >= timestamp)
+
+            session.comments = [...session.comments, {
                 type: 'file',
-                id: file.Id,
-                timestamp: new Date(file.DateTele).valueOf(),
+                id: parseInt(file.Id),
+                timestamp,
                 filename: file.NomFichier,
-                extension: file.Extension
+                mimeType: file.Extension
             }]
         }
     }
@@ -109,7 +110,9 @@
 
 <Base>
     <h1>Journal</h1>
-    <StructuredList condensed flush>
+
+
+    <!-- <StructuredList condensed flush>
         <StructuredListHead>
             <StructuredListRow head>
                 <StructuredListCell head>Date</StructuredListCell>
@@ -140,5 +143,5 @@
                 </StructuredListRow>
             {/each}
         </StructuredListBody>
-    </StructuredList>
+    </StructuredList> -->
 </Base>

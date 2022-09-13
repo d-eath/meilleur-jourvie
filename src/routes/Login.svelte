@@ -27,10 +27,10 @@
 
         const loginReq = await axios.post(`${VITE_API_URL}/getUnDeveloppeur.php`, stringify({
             matricule: username,
-            motPasse: password,
-        }, { encode: true }), {
+            motPasse: password
+        }), {
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
             },
         })
 
@@ -45,14 +45,14 @@
         }
 
         userInfo.set({
-            userId: loginReq.data.Id,
+            id: parseInt(loginReq.data.Id),
             lastName: loginReq.data.Nom,
             firstName: loginReq.data.Prenom,
             isCoordinator: loginReq.data.EstCoordo === '1',
-            projectId: loginReq.data.ProjetAssigne_Id,
+            projectId: parseInt(loginReq.data.ProjetAssigne_Id),
             projectName: loginReq.data.NomProjet,
             loginToken: loginReq.data.EtatConnexion,
-            sessionId: loginReq.data.SessionId
+            sessionId: parseInt(loginReq.data.SessionId)
         })
 
         push('/journal')
