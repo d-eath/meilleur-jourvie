@@ -1,13 +1,35 @@
 <script>
+    import {
+        StructuredList,
+        StructuredListBody,
+        StructuredListCell,
+        StructuredListHead,
+        StructuredListRow,
+        TooltipIcon,
+    } from 'carbon-components-svelte'
+
+    import ChatIcon from 'carbon-icons-svelte/lib/Chat.svelte'
+    import AttachmentIcon from 'carbon-icons-svelte/lib/Attachment.svelte'
+    import PlayIcon from 'carbon-icons-svelte/lib/Play.svelte'
+    import StopIcon from 'carbon-icons-svelte/lib/Stop.svelte'
+
     import Base from '../components/Base.svelte'
 
     import axios from 'axios'
+    import dayjs from 'dayjs'
     import { onMount } from 'svelte'
     import { get } from 'svelte/store'
     import { stringify } from 'query-string'
     import { userInfo } from '../stores'
 
     const { VITE_API_URL } = import.meta.env
+
+    const statusTooltips = {
+        sessionStart: { icon: PlayIcon, text: 'Début d\'une session', color: 'green' },
+        sessionEnd: { icon: StopIcon, text: 'Fin d\'une session', color: 'red' },
+        comment: { icon: ChatIcon, text: 'Commentaire', color: 'blue' },
+        file: { icon: AttachmentIcon, text: 'Fichier', color: 'gray' }
+    }
 
     let entries = []
 
@@ -16,6 +38,7 @@
         await getComments()
 
         entries.sort((x, y) => y.timestamp - x.timestamp)
+        entries = entries
     })
 
     async function getSessions() {
@@ -86,4 +109,36 @@
 
 <Base>
     <h1>Journal</h1>
+    <StructuredList condensed flush>
+        <StructuredListHead>
+            <StructuredListRow head>
+                <StructuredListCell head>Date</StructuredListCell>
+                <StructuredListCell head>Statut</StructuredListCell>
+                <StructuredListCell head>Tâche</StructuredListCell>
+                <StructuredListCell head>Commentaires</StructuredListCell>
+            </StructuredListRow>
+        </StructuredListHead>
+        <StructuredListBody>
+            {#each entries as entry}
+                <StructuredListRow>
+                    <StructuredListCell>{dayjs(entry.timestamp).format('YYYY-MM-DD HH:mm:ss')}</StructuredListCell>
+                    <StructuredListCell>
+                        <TooltipIcon tooltipText={statusTooltips[entry.type].text}>
+                            <svelte:component this={statusTooltips[entry.type].icon} fill="red" />
+                        </TooltipIcon>
+                    </StructuredListCell>
+                    <StructuredListCell>
+                        {#if entry.task}
+                            {entry.task.number}
+                        {:else}
+                            -
+                        {/if}
+                    </StructuredListCell>
+                    <StructuredListCell>
+                        {entry.content}
+                    </StructuredListCell>
+                </StructuredListRow>
+            {/each}
+        </StructuredListBody>
+    </StructuredList>
 </Base>
