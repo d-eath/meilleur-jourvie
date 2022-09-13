@@ -28,7 +28,7 @@
         const loginReq = await axios.post(`${VITE_API_URL}/getUnDeveloppeur.php`, stringify({
             matricule: username,
             motPasse: password,
-        }, { encode: false }), {
+        }, { encode: true }), {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
             },
