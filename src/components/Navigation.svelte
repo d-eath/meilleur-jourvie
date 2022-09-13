@@ -17,6 +17,7 @@
     import ChartColumnIcon from 'carbon-icons-svelte/lib/ChartColumn.svelte'
     import UserAvatarFilledAltIcon from 'carbon-icons-svelte/lib/UserAvatarFilledAlt.svelte'
 
+    import { get } from 'svelte/store'
     import { location, push } from 'svelte-spa-router'
     import { userInfo } from '../stores/userInfo'
 
@@ -26,7 +27,15 @@
     function logout() {
         push('/login')
 
-        userInfo.set({})
+        const currentUserInfo = get(userInfo)
+
+        // avoid guard redirect by deleting loginToken
+        delete currentUserInfo.loginToken
+        userInfo.set(currentUserInfo)
+
+        // avoid "undefined" world with a delay
+        setTimeout(() => { userInfo.set({}) }, 1000)
+        
     }
 </script>
 
