@@ -81,25 +81,6 @@
                 extension: file.Extension
             }]
         }
-
-        // const commentsReq = await axios.get(`${VITE_API_URL}/getCommentaires.php?devId=${get(userInfo).userId}`)
-
-        // for (const comment of commentsReq.data) {
-        //     const session = sessions.find(s => s.id === comment.Session_Id)
-
-        //     session.comments = [...session.comments, {
-        //         type: 'comment',
-        //         id: comment.Id,
-        //         timestamp: new Date(comment.Horodateur).valueOf()
-        //     }]
-        // }
-
-        // const filesReq = await axios.get(`${VITE_API_URL}/getTeleversements.php?devId=${get(userInfo).userId}`)
-
-        // // TODO
-        // for (const file of filesReq.data) {
-        //     const session = sessions.find(s => s.id === file.Session_Id)
-        // }
     }
 </script>
 
