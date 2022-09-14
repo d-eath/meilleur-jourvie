@@ -69,7 +69,8 @@
                 <InlineNotification
                     lowContrast
                     kind="error"
-                    title="Connexion échouée."
+                    title="Connexion échouée"
+                    subtitle="Veuillez revérifier vos informations de connexion et réessayez."
                     on:close={e => {
                         e.preventDefault()
                         showLoginFailed = false
@@ -89,12 +90,15 @@
             
             <Button icon={LoginIcon} on:click={login}>Connexion</Button>
         </div>
-        <a class="security-modal-link" href={null} on:click={() => showSecurityModal = true}>
-            Avis sur les risques de sécurité de Meilleur Jourvie
-        </a>
-        <div class="credit-footer">
-            Créé par Davis Eath avec Svelte
+        <div class="footer">
+            <a class="security-modal-link" href={null} on:click={() => showSecurityModal = true}>
+                Avis sur les risques de sécurité de Meilleur Jourvie
+            </a>
+            <div class="credit-footer">
+                Créé par Davis Eath avec Svelte
+            </div>
         </div>
+        
     </div>
 </div>
 
@@ -127,7 +131,10 @@
         align-items: center;
         justify-content: center;
 
-        background-color: #d0d0d0;
+        background-image: url("login_background.jpg");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
     }
 
     .inner {
@@ -142,6 +149,12 @@
     .spacing {
         margin-top: 8px;
         margin-bottom: 8px;
+    }
+
+    .footer {
+        padding-top: 1px;
+        padding-bottom: 16px;
+        background-color: #e4e4e4;
     }
 
     .security-modal-link {
