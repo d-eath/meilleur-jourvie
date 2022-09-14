@@ -138,6 +138,13 @@
         
         return `${hDisplay}${mDisplay}${seconds}s`
     }
+
+    function calculateCommentsPerHour(session) {
+        const comments = session.comments.filter(c => c.type === 'comment').length 
+        const hours = dayjs(session.timestampEnd).diff(dayjs(session.timestampStart), 'hour', true)
+
+        return (comments / hours).toFixed(1).replace('.', ',')
+    }
 </script>
 
 <Base>
@@ -152,7 +159,7 @@
                         <Grid narrow>
                             <Row>
                                 <Column>
-                                    <h6>№ tâche</h6>
+                                    <h6>Tâche</h6>
                                 </Column>
                                 <Column>
                                     <h6>Date de début</h6>
@@ -190,7 +197,8 @@
                                 <Column>
                                     <span>
                                         <span class="comment-icons"><ChatIcon /></span>
-                                        {session.comments.filter(c => c.type === 'comment').length} •
+                                        {session.comments.filter(c => c.type === 'comment').length}
+                                        <span class="comment-ratio">({calculateCommentsPerHour(session)}/h)</span> •
                                         <span class="comment-icons"><AttachmentIcon /></span>
                                         {session.comments.filter(c => c.type === 'file').length}
                                     </span>
@@ -214,6 +222,10 @@
 
     .comment-icons {
         vertical-align: middle;
+    }
+
+    .comment-ratio {
+        color: #666;
     }
 
     :global(.bx--tag) {
