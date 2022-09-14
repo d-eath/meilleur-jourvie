@@ -16,6 +16,7 @@
     import TaskIcon from 'carbon-icons-svelte/lib/Task.svelte'
     import ChartColumnIcon from 'carbon-icons-svelte/lib/ChartColumn.svelte'
     import UserAvatarFilledAltIcon from 'carbon-icons-svelte/lib/UserAvatarFilledAlt.svelte'
+    import VolumeFileStorageIcon from 'carbon-icons-svelte/lib/VolumeFileStorage.svelte'
 
     import { get } from 'svelte/store'
     import { location, push } from 'svelte-spa-router'
@@ -36,7 +37,6 @@
 
         // avoid "undefined" world with a delay
         setTimeout(() => { userInfo.set({}) }, 1000)
-        
     }
 </script>
 
@@ -49,7 +49,13 @@
         </li>
     </HeaderNav>
     <HeaderUtilities>
-        <HeaderAction icon={UserAvatarFilledAltIcon} closeIcon={UserAvatarFilledAltIcon} bind:isOpen={isProfileOpen} text="{$userInfo?.firstName} {$userInfo?.lastName}">
+        <HeaderAction
+            icon={UserAvatarFilledAltIcon}
+            closeIcon={UserAvatarFilledAltIcon}
+            bind:isOpen={isProfileOpen}
+            text="{$userInfo?.firstName}
+            {$userInfo?.lastName}"
+        >
             <HeaderPanelLinks>
                 <li>
                     <div class="profile-summary">
@@ -74,6 +80,7 @@
 <SideNav bind:isOpen={isSideNavOpen} rail>
     <SideNavItems>
         <SideNavLink icon={CatalogIcon} href="#/journal" isSelected={$location === '/journal'} text="Journal" />
+        <SideNavLink icon={VolumeFileStorageIcon} href="#/files" isSelected={$location === '/files'} text="Fichiers" />
         <SideNavLink icon={TaskIcon} href="#/tasks" isSelected={$location === '/tasks'} text="Tâches" />
         <SideNavLink icon={ChartColumnIcon} href="#/stats" isSelected={$location === '/stats'} text="Statistiques" />
     </SideNavItems>

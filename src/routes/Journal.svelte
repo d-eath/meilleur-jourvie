@@ -129,16 +129,16 @@
         {#each sessions as session}
             <AccordionItem>
                 <svelte:fragment slot="title">
-                    <Grid>
+                    <Grid narrow>
                         <Row>
                             <Column>
                                 <h6>№ tâche</h6>
                             </Column>
                             <Column>
-                                <h6>Date</h6>
+                                <h6>Date de début</h6>
                             </Column>
                             <Column>
-                                <h6>Heure</h6>
+                                <h6>Intervalle d'heure</h6>
                             </Column>
                             <Column>
                                 <h6>Durée</h6>
@@ -146,7 +146,6 @@
                             <Column>
                                 <h6>Commentaires</h6>
                             </Column>
-                            <Column />
                         </Row>
                         <Row>
                             <Column>
@@ -176,7 +175,6 @@
                                     {session.comments.filter(c => c.type === 'file').length}
                                 </span>
                             </Column>
-                            <Column />
                         </Row>
                     </Grid>
                 </svelte:fragment>
