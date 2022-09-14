@@ -1,11 +1,11 @@
 <script>
     import {
-        StructuredList,
-        StructuredListBody,
-        StructuredListCell,
-        StructuredListHead,
-        StructuredListRow,
-        TooltipIcon,
+        Accordion,
+        AccordionItem,
+        Column,
+        Grid,
+        Row,
+        Tag,
     } from 'carbon-components-svelte'
 
     import ChatIcon from 'carbon-icons-svelte/lib/Chat.svelte'
@@ -15,6 +15,7 @@
 
     import Base from '../components/Base.svelte'
 
+    import 'dayjs/locale/fr'
     import axios from 'axios'
     import dayjs from 'dayjs'
     import { onMount } from 'svelte'
@@ -40,10 +41,9 @@
 
         for (const session of sessions) {
             session.comments.sort((a, b) => b.timestamp - a.timestamp)
-            session.comments = session.comments
         }
 
-        console.log(sessions)
+        sessions = sessions
     })
 
     async function getSessions() {
@@ -106,42 +106,98 @@
             }]
         }
     }
+
+    function calculateDuration(timestampStart, timestampEnd) {
+        const fullSeconds = dayjs(timestampEnd).diff(dayjs(timestampStart), 'second')
+
+        const hours = Math.floor(fullSeconds / 3600)
+        const minutes = Math.floor(fullSeconds % 3600 / 60)
+        const seconds = Math.floor(fullSeconds % 60)
+
+        const hDisplay = hours > 0 ? hours + 'h ' : ''
+        const mDisplay = minutes > 0 ? minutes + 'm ' : ''
+        
+        return `${hDisplay}${mDisplay}${seconds}s`
+    }
 </script>
 
 <Base>
     <h1>Journal</h1>
 
-
-    <!-- <StructuredList condensed flush>
-        <StructuredListHead>
-            <StructuredListRow head>
-                <StructuredListCell head>Date</StructuredListCell>
-                <StructuredListCell head>Statut</StructuredListCell>
-                <StructuredListCell head>Tâche</StructuredListCell>
-                <StructuredListCell head>Commentaires</StructuredListCell>
-            </StructuredListRow>
-        </StructuredListHead>
-        <StructuredListBody>
-            {#each entries as entry}
-                <StructuredListRow>
-                    <StructuredListCell>{dayjs(entry.timestamp).format('YYYY-MM-DD HH:mm:ss')}</StructuredListCell>
-                    <StructuredListCell>
-                        <TooltipIcon tooltipText={statusTooltips[entry.type].text}>
-                            <svelte:component this={statusTooltips[entry.type].icon} fill="red" />
-                        </TooltipIcon>
-                    </StructuredListCell>
-                    <StructuredListCell>
-                        {#if entry.task}
-                            {entry.task.number}
-                        {:else}
-                            -
-                        {/if}
-                    </StructuredListCell>
-                    <StructuredListCell>
-                        {entry.content}
-                    </StructuredListCell>
-                </StructuredListRow>
-            {/each}
-        </StructuredListBody>
-    </StructuredList> -->
+    <h2>Sessions précédentes</h2>
+    <Accordion align="start">
+        {#each sessions as session}
+            <AccordionItem>
+                <svelte:fragment slot="title">
+                    <Grid>
+                        <Row>
+                            <Column>
+                                <h6>№ tâche</h6>
+                            </Column>
+                            <Column>
+                                <h6>Date</h6>
+                            </Column>
+                            <Column>
+                                <h6>Heure</h6>
+                            </Column>
+                            <Column>
+                                <h6>Durée</h6>
+                            </Column>
+                            <Column>
+                                <h6>Commentaires</h6>
+                            </Column>
+                            <Column />
+                        </Row>
+                        <Row>
+                            <Column>
+                                <Tag type="blue" size="sm">{session.task.number}</Tag>
+                            </Column>
+                            <Column>
+                                <span>
+                                    {dayjs(session.timestampStart).locale('fr').format('dddd D MMMM YYYY')}
+                                </span>
+                            </Column>
+                            <Column>
+                                <span>
+                                    {dayjs(session.timestampStart).locale('fr').format('HH:mm')} -
+                                    {dayjs(session.timestampEnd).locale('fr').format('HH:mm')}
+                                </span>
+                            </Column>
+                            <Column>
+                                <span>
+                                    {calculateDuration(session.timestampStart, session.timestampEnd)}
+                                </span>
+                            </Column>
+                            <Column>
+                                <span>
+                                    <span class="comment-icons"><ChatIcon /></span>
+                                    {session.comments.filter(c => c.type === 'comment').length} •
+                                    <span class="comment-icons"><AttachmentIcon /></span>
+                                    {session.comments.filter(c => c.type === 'file').length}
+                                </span>
+                            </Column>
+                            <Column />
+                        </Row>
+                    </Grid>
+                </svelte:fragment>
+                {#each session.comments as comment}
+                    <div>{comment.content}</div>
+                {/each}
+            </AccordionItem>
+        {/each}
+    </Accordion>
 </Base>
+
+<style>
+    h2 {
+        margin-bottom: 24px;
+    }
+
+    .comment-icons {
+        vertical-align: middle;
+    }
+
+    :global(.bx--tag) {
+        cursor: pointer;
+    }
+</style>
