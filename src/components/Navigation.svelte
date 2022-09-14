@@ -18,12 +18,27 @@
     import UserAvatarFilledAltIcon from 'carbon-icons-svelte/lib/UserAvatarFilledAlt.svelte'
     import VolumeFileStorageIcon from 'carbon-icons-svelte/lib/VolumeFileStorage.svelte'
 
+    import axios from 'axios'
+    import { onMount } from 'svelte'
     import { get } from 'svelte/store'
     import { location, push } from 'svelte-spa-router'
     import { stayLoggedIn, userInfo } from '../stores'
+    
+    const { VITE_API_URL } = import.meta.env
 
+    let projectName
     let isSideNavOpen = false
     let isProfileOpen = false
+
+    onMount(() => {
+        getProjectName()
+    })
+
+    async function getProjectName() {
+        const req = await axios.get(`${VITE_API_URL}/getNomProjet.php?projetId=${get(userInfo).projectId}`)
+
+        projectName = req.data.Nom
+    }
 
     function logout() {
         push('/login')
@@ -44,7 +59,7 @@
     <HeaderNav>
         <li role="none">
             <span class="project-header">
-                Projet: <span class="project-name">{$userInfo?.projectName}</span>
+                Projet: <span class="project-name">{projectName}</span>
             </span>
         </li>
     </HeaderNav>
@@ -53,8 +68,7 @@
             icon={UserAvatarFilledAltIcon}
             closeIcon={UserAvatarFilledAltIcon}
             bind:isOpen={isProfileOpen}
-            text="{$userInfo?.firstName}
-            {$userInfo?.lastName}"
+            text="{$userInfo?.firstName} {$userInfo?.lastName}"
         >
             <HeaderPanelLinks>
                 <li>

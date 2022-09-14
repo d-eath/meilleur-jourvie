@@ -50,9 +50,8 @@
             firstName: loginReq.data.Prenom,
             isCoordinator: loginReq.data.EstCoordo === '1',
             projectId: parseInt(loginReq.data.ProjetAssigne_Id),
-            projectName: loginReq.data.NomProjet,
             loginToken: loginReq.data.EtatConnexion,
-            sessionId: parseInt(loginReq.data.SessionId)
+            sessionId: loginReq.data.SessionId !== 0 ? parseInt(loginReq.data.SessionId) : null
         })
 
         push('/journal')
@@ -89,6 +88,7 @@
             </div>
             
             <Button icon={LoginIcon} on:click={login}>Connexion</Button>
+            <Button kind="ghost" on:click={login}>Utiliser une clé de connexion</Button>
         </div>
         <div class="footer">
             <a class="security-modal-link" href={null} on:click={() => showSecurityModal = true}>
@@ -162,7 +162,6 @@
         text-align: center;
         margin-top: 16px;
         cursor: pointer;
-        text-decoration: underline;
     }
 
     .credit-footer {
