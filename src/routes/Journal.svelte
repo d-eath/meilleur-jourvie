@@ -31,7 +31,7 @@
         await getComments()
         await getFiles()
 
-        currentSession.comments.sort((a, b) => b.timestamp - a.timestamp)
+        currentSession?.comments.sort((a, b) => b.timestamp - a.timestamp)
 
         for (const session of pastSessions) {
             session.comments.sort((a, b) => b.timestamp - a.timestamp)
@@ -114,7 +114,7 @@
                 mimeType: file.Extension
             }
 
-            if (newFile.timestamp >= currentSession.timestampStart) {
+            if (newFile.timestamp >= currentSession?.timestampStart) {
                 currentSession.comments = [...currentSession.comments, newFile]
 
                 continue;
@@ -133,15 +133,28 @@
         const minutes = Math.floor(fullSeconds % 3600 / 60)
         const seconds = fullSeconds % 60
 
-        const hDisplay = hours > 0 ? hours + 'h ' : ''
-        const mDisplay = minutes > 0 ? minutes + 'm ' : ''
+        let result = ''
+
+        if (hours > 0) {
+            result += hours + 'h '
+        }
+
+        if (minutes > 0) {
+            result += minutes + 'm '
+        }
+
+        result += seconds + 's'
         
-        return `${hDisplay}${mDisplay}${seconds}s`
+        return result
     }
 
     function calculateCommentsPerHour(session) {
         const comments = session.comments.filter(c => c.type === 'comment').length 
         const hours = dayjs(session.timestampEnd).diff(dayjs(session.timestampStart), 'hour', true)
+
+        if (hours === 0) {
+            return 0
+        }
 
         return (comments / hours).toFixed(1).replace('.', ',')
     }
