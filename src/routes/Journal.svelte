@@ -1,7 +1,8 @@
 <script>
-    import { Accordion, AccordionItem } from 'carbon-components-svelte'
+    import { Accordion, AccordionItem, Tile } from 'carbon-components-svelte'
 
     import Base from '../components/Base.svelte'
+    import JournalComments from '../components/JournalComments.svelte'
     import PastSessionSummary from '../components/PastSessionSummary.svelte'
 
     import axios from 'axios'
@@ -125,10 +126,7 @@
             {#each pastSessions as session}
                 <AccordionItem>
                     <PastSessionSummary session={session} slot="title" />
-
-                    {#each session.comments as comment}
-                        <div>{comment.content}</div>
-                    {/each}
+                    <JournalComments comments={session.comments} />
                 </AccordionItem>
             {/each}
         </Accordion>
