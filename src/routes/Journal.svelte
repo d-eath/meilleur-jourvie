@@ -1,5 +1,5 @@
 <script>
-    import { Accordion, AccordionItem, Tile } from 'carbon-components-svelte'
+    import { Accordion, AccordionItem, InlineNotification } from 'carbon-components-svelte'
 
     import Base from '../components/Base.svelte'
     import JournalComments from '../components/JournalComments.svelte'
@@ -120,6 +120,22 @@
 <Base>
     <h1>Journal</h1>
 
+    <h2>Session active</h2>
+
+    {#if currentSession}
+        <p>Session</p>
+    {:else}
+        <div class="no-active-session-info">
+            <InlineNotification
+                lowContrast
+                hideCloseButton
+                kind="info"
+                title="Vous n'avez pas de session active."
+                subtitle="Consultez vos tâches pour démarrer une session."
+            />
+        </div>
+    {/if}
+
     {#if pastSessions.length > 0}
         <h2>Sessions précédentes</h2>
         <Accordion align="start">
@@ -134,7 +150,16 @@
 </Base>
 
 <style>
+    h1 {
+        margin-bottom: 32px;
+    }
+
     h2 {
+        margin-top: 24px;
         margin-bottom: 24px;
+    }
+
+    .no-active-session-info :global(.bx--inline-notification) {
+        max-width: 100%;
     }
 </style>
