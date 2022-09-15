@@ -23,6 +23,7 @@
     import { get } from 'svelte/store'
     import { location, push } from 'svelte-spa-router'
     import { stayLoggedIn, userInfo } from '../stores'
+    import LoginSvelte from 'carbon-icons-svelte/lib/Login.svelte';
     
     const { VITE_API_URL } = import.meta.env
 
@@ -31,16 +32,18 @@
     let isProfileOpen = false
 
     onMount(() => {
-        getProjectName()
+        if (get(userInfo).loginToken) {
+            getProjectName()
+        }
     })
 
-    async function getProjectName() {
+    const getProjectName = async () => {
         const req = await axios.get(`${VITE_API_URL}/getNomProjet.php?projetId=${get(userInfo).projectId}`)
 
         projectName = req.data.Nom
     }
 
-    function logout() {
+    const logout = () => {
         push('/login')
 
         const currentUserInfo = get(userInfo)
@@ -55,50 +58,52 @@
     }
 </script>
 
-<Header company="Meilleur" platformName="Jourvie" bind:isSideNavOpen>
-    <HeaderNav>
-        <li role="none">
-            <span class="project-header">
-                Projet: <span class="project-name">{projectName}</span>
-            </span>
-        </li>
-    </HeaderNav>
-    <HeaderUtilities>
-        <HeaderAction
-            icon={UserAvatarFilledAltIcon}
-            closeIcon={UserAvatarFilledAltIcon}
-            bind:isOpen={isProfileOpen}
-            text="{$userInfo?.firstName} {$userInfo?.lastName}"
-        >
-            <HeaderPanelLinks>
-                <li>
-                    <div class="profile-summary">
-                        <div class="profile-summary-icon">
-                            <UserAvatarFilledAltIcon size={32} />
+{#if $userInfo.loginToken}
+    <Header company="Meilleur" platformName="Jourvie" bind:isSideNavOpen>
+        <HeaderNav>
+            <li role="none">
+                <span class="project-header">
+                    Projet: <span class="project-name">{projectName}</span>
+                </span>
+            </li>
+        </HeaderNav>
+        <HeaderUtilities>
+            <HeaderAction
+                icon={UserAvatarFilledAltIcon}
+                closeIcon={UserAvatarFilledAltIcon}
+                bind:isOpen={isProfileOpen}
+                text="{$userInfo?.firstName} {$userInfo?.lastName}"
+            >
+                <HeaderPanelLinks>
+                    <li>
+                        <div class="profile-summary">
+                            <div class="profile-summary-icon">
+                                <UserAvatarFilledAltIcon size={32} />
+                            </div>
+                            <div class="profile-summary-name">
+                                {$userInfo?.firstName} {$userInfo?.lastName}
+                            </div>
+                            <div class="profile-summary-role">
+                                {$userInfo?.isCoordinator ? 'Coordinateur' : 'Développeur'}
+                            </div>
                         </div>
-                        <div class="profile-summary-name">
-                            {$userInfo?.firstName} {$userInfo?.lastName}
-                        </div>
-                        <div class="profile-summary-role">
-                            {$userInfo?.isCoordinator ? 'Coordinateur' : 'Développeur'}
-                        </div>
-                    </div>
-                </li>
-                <HeaderPanelDivider />
-                <HeaderPanelLink on:click={logout}>Déconnexion</HeaderPanelLink>
-            </HeaderPanelLinks>
-        </HeaderAction>
-    </HeaderUtilities>
-</Header>
+                    </li>
+                    <HeaderPanelDivider />
+                    <HeaderPanelLink on:click={logout}>Déconnexion</HeaderPanelLink>
+                </HeaderPanelLinks>
+            </HeaderAction>
+        </HeaderUtilities>
+    </Header>
 
-<SideNav bind:isOpen={isSideNavOpen} rail>
-    <SideNavItems>
-        <SideNavLink icon={CatalogIcon} href="#/journal" isSelected={$location === '/journal'} text="Journal" />
-        <SideNavLink icon={VolumeFileStorageIcon} href="#/files" isSelected={$location === '/files'} text="Fichiers" />
-        <SideNavLink icon={TaskIcon} href="#/tasks" isSelected={$location === '/tasks'} text="Tâches" />
-        <SideNavLink icon={ChartColumnIcon} href="#/stats" isSelected={$location === '/stats'} text="Statistiques" />
-    </SideNavItems>
-</SideNav>
+    <SideNav bind:isOpen={isSideNavOpen} rail>
+        <SideNavItems>
+            <SideNavLink icon={CatalogIcon} href="#/journal" isSelected={$location === '/journal'} text="Journal" />
+            <SideNavLink icon={VolumeFileStorageIcon} href="#/files" isSelected={$location === '/files'} text="Fichiers" />
+            <SideNavLink icon={TaskIcon} href="#/tasks" isSelected={$location === '/tasks'} text="Tâches" />
+            <SideNavLink icon={ChartColumnIcon} href="#/stats" isSelected={$location === '/stats'} text="Statistiques" />
+        </SideNavItems>
+    </SideNav>
+{/if}
 
 <style>
     .project-header {

@@ -31,7 +31,7 @@
         pastSessions = pastSessions
     })
 
-    async function getSessions() {
+    const getSessions = async () => {
         const req = await axios.get(`${VITE_API_URL}/getSessionsTravail.php?devId=${get(userInfo).id}`)
 
         for (const session of req.data) {
@@ -56,7 +56,7 @@
         }
     }
 
-    async function getComments() {
+    const getComments = async () => {
         const req = await axios.post(`${VITE_API_URL}/getCommentaires.php?devId=${get(userInfo).id}`, stringify({
             acces: get(userInfo).loginToken
         }), {
@@ -86,7 +86,7 @@
         }
     }
 
-    async function getFiles() {
+    const getFiles = async () => {
         const req = await axios.post(`${VITE_API_URL}/getTeleversements.php?devId=${get(userInfo).id}`, stringify({
             acces: get(userInfo).loginToken
         }), {

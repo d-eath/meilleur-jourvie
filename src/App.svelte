@@ -4,7 +4,7 @@
 
     import Navigation from './components/Navigation.svelte'
 
-    function conditionsFailed() {
+    const conditionsFailed = () => {
         replace('/')
     }
 </script>

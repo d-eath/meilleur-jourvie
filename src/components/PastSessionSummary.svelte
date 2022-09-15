@@ -9,7 +9,7 @@
 
     export let session
 
-    function calculateCommentsPerHour(session) {
+    const calculateCommentsPerHour = (session) => {
         const comments = session.comments.filter(c => c.type === 'comment').length 
         const hours = dayjs(session.timestampEnd).diff(dayjs(session.timestampStart), 'hour', true)
 
@@ -20,7 +20,7 @@
         return (comments / hours).toFixed(1).replace('.', ',')
     }
 
-    function calculateDuration(timestampStart, timestampEnd) {
+    const calculateDuration = (timestampStart, timestampEnd) => {
         const fullSeconds = dayjs(timestampEnd).diff(dayjs(timestampStart), 'second')
 
         const hours = Math.floor(fullSeconds / 3600)

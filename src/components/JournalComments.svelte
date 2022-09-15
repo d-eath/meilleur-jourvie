@@ -3,22 +3,16 @@
 
     import InformationIcon from 'carbon-icons-svelte/lib/Information.svelte'
 
+    import FileComment from './FileComment.svelte'
+
     import 'dayjs/locale/fr'
     import dayjs from 'dayjs'
 
     export let comments
 
-    function processComment(content) {
-        return content.substring(2)
-    }
-
-    function processLegacyComment(content) {
-        return content.replace(/EOLEOL/g, '\n')
-    }
-
-    function isLegacyComment(comment) {
-        return !comment.content.startsWith(String.fromCharCode(8204))
-    }
+    const processComment = content => content.substring(2)
+    const processLegacyComment = content => content.replace(/EOLEOL/g, '\n')
+    const isLegacyComment = content => !content.startsWith(String.fromCharCode(8204))
 </script>
 
 {#if comments.length > 0}
@@ -26,8 +20,8 @@
         <Tile light>
             <div>
                 {#if comment.type === 'file'}
-                    <p>Fichier</p>
-                {:else if !isLegacyComment(comment)}
+                    <FileComment comment={comment} />
+                {:else if !isLegacyComment(comment.content)}
                     <p class="comment">{processComment(comment.content)}</p>
                 {:else}
                     <p class="legacy-comment">{processLegacyComment(comment.content)}</p>
@@ -36,7 +30,7 @@
             <div class="timestamp">
                 {dayjs(comment.timestamp).locale('fr').format('dddd D MMMM YYYY à HH:mm')}
                 <span class="legacy-icon">
-                    {#if comment.type === 'comment' && isLegacyComment(comment)}
+                    {#if comment.type === 'comment' && isLegacyComment(comment.content)}
                         <TooltipIcon
                             icon={InformationIcon}
                             tooltipText="Commentaire écrit avec l'application originale"

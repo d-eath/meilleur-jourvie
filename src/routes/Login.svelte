@@ -22,7 +22,7 @@
     let showSecurityModal = false
     let showLoginFailed = false
 
-    async function login() {
+    const login = async () => {
         showLoginFailed = false
 
         const loginReq = await axios.post(`${VITE_API_URL}/getUnDeveloppeur.php`, stringify({
@@ -88,7 +88,7 @@
             </div>
             
             <Button icon={LoginIcon} on:click={login}>Connexion</Button>
-            <Button kind="ghost" on:click={login}>Utiliser une clé de connexion</Button>
+            <Button kind="ghost">Utiliser une clé de connexion</Button>
         </div>
         <div class="footer">
             <a class="security-modal-link" href={null} on:click={() => showSecurityModal = true}>
@@ -98,7 +98,6 @@
                 Créé par Davis Eath avec Svelte
             </div>
         </div>
-        
     </div>
 </div>
 
