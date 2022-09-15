@@ -23,7 +23,6 @@
     import { get } from 'svelte/store'
     import { location, push } from 'svelte-spa-router'
     import { stayLoggedIn, userInfo } from '../stores'
-    import LoginSvelte from 'carbon-icons-svelte/lib/Login.svelte';
     
     const { VITE_API_URL } = import.meta.env
 

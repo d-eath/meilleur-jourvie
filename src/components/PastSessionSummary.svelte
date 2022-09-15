@@ -52,7 +52,7 @@
             <h6>Date de début</h6>
         </Column>
         <Column>
-            <h6>Intervalle d'heure</h6>
+            <h6>Heure</h6>
         </Column>
         <Column>
             <h6>Durée</h6>

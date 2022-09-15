@@ -2,6 +2,7 @@
     import { Accordion, AccordionItem, InlineNotification } from 'carbon-components-svelte'
 
     import Base from '../components/Base.svelte'
+    import CurrentSession from '../components/CurrentSession.svelte'
     import JournalComments from '../components/JournalComments.svelte'
     import PastSessionSummary from '../components/PastSessionSummary.svelte'
 
@@ -29,6 +30,9 @@
 
         currentSession = currentSession
         pastSessions = pastSessions
+
+        // TEST
+        currentSession = pastSessions[0]
     })
 
     const getSessions = async () => {
@@ -123,7 +127,10 @@
     <h2>Session active</h2>
 
     {#if currentSession}
-        <p>Session</p>
+        <div class="current-session">
+            <CurrentSession session={currentSession} />
+        </div>
+        
     {:else}
         <div class="no-active-session-info">
             <InlineNotification
@@ -161,5 +168,13 @@
 
     .no-active-session-info :global(.bx--inline-notification) {
         max-width: 100%;
+    }
+
+    .current-session {
+        margin-bottom: 72px;
+    }
+
+    :global(.bx--accordion__content) {
+        padding-right: 16px;
     }
 </style>
