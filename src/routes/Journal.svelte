@@ -14,29 +14,32 @@
 
     const { VITE_API_URL } = import.meta.env
 
+    let _currentSession = null
+    let _pastSessions = []
     let currentSession = null
     let pastSessions = []
     let expandedSessions = {}
 
     const updateJournal = async () => {
-        currentSession = null
-        pastSessions = []
+        _currentSession = null
+        _pastSessions = []
 
         await getSessions()
         await getComments()
         await getFiles()
 
         // @ts-ignore
-        currentSession?.comments.sort((a, b) => b.timestamp - a.timestamp)
+        _currentSession?.comments.sort((a, b) => b.timestamp - a.timestamp)
 
-        for (const session of pastSessions) {
+        for (const session of _pastSessions) {
             session.comments.sort((a, b) => b.timestamp - a.timestamp)
         }
 
-        currentSession = currentSession
-        pastSessions = pastSessions
+        currentSession = _currentSession
+        pastSessions = _pastSessions
 
-        console.log('updateJournal()')
+        console.log(currentSession)
+        console.log(pastSessions)
     }
 
     const getSessions = async () => {
@@ -55,12 +58,12 @@
             }
 
             if (newSession.timestampEnd === null) {
-                currentSession = newSession
+                _currentSession = newSession
 
                 continue;
             }
 
-            pastSessions = [...pastSessions, newSession]
+            _pastSessions = [..._pastSessions, newSession]
         }
     }
 
@@ -82,13 +85,13 @@
                 content: comment.Contenu
             }
 
-            if (sessionId === currentSession?.id) {
-                currentSession.comments = [...currentSession.comments, newComment]
+            if (sessionId === _currentSession?.id) {
+                _currentSession.comments = [..._currentSession.comments, newComment]
 
                 continue;
             }
 
-            const session = pastSessions.find(s => s.id === sessionId)
+            const session = _pastSessions.find(s => s.id === sessionId)
 
             session.comments = [...session.comments, newComment]
         }
@@ -112,13 +115,13 @@
                 mimeType: file.Extension
             }
 
-            if (newFile.timestamp >= currentSession?.timestampStart) {
-                currentSession.comments = [...currentSession.comments, newFile]
+            if (newFile.timestamp >= _currentSession?.timestampStart) {
+                _currentSession.comments = [..._currentSession.comments, newFile]
 
                 continue;
             }
 
-            const session = pastSessions.find(s => s.timestampStart <= newFile.timestamp && s.timestampEnd >= newFile.timestamp)
+            const session = _pastSessions.find(s => s.timestampStart <= newFile.timestamp && s.timestampEnd >= newFile.timestamp)
 
             session.comments = [...session.comments, newFile]
         }
@@ -156,7 +159,7 @@
         <h2>Sessions précédentes</h2>
         <Accordion align="start">
             {#each pastSessions as session}
-                <AccordionItem iconDescription="">
+                <AccordionItem iconDescription="" bind:open={expandedSessions[session.id]}>
                     <PastSessionSummary session={session} slot="title" />
                     <JournalComments comments={session.comments} />
                 </AccordionItem>

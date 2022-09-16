@@ -17,6 +17,8 @@
 
     const dispatch = createEventDispatcher()
 
+    let commentContent
+
     let secondsElapsed = 0
     let timeElapsed
     let commentsPerHour
@@ -68,6 +70,23 @@
             }
         })
         
+        dispatch('updatejournal')
+    }
+
+    const postComment = async () => {
+        const req = await axios.post(`${VITE_API_URL}/postCommentaire.php`, stringify({
+            devId: get(userInfo).id,
+            sessId: session.id,
+            comm: String.fromCharCode(0x1F) + ' ' + commentContent,
+            acces: get(userInfo).loginToken
+        }), {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+            }
+        })
+
+        commentContent = ''
+
         dispatch('updatejournal')
     }
 
@@ -123,11 +142,11 @@
                 <Tile light>
                     <div class="session-actions">
                         <div class="comment-box">
-                            <TextArea maxCount={500} placeholder="Écrivez votre commentaire..." />
+                            <TextArea maxCount={500} placeholder="Écrivez votre commentaire..." bind:value={commentContent} />
                         </div>
                         <div class="comment-buttons">
-                            <Button icon={ChatIcon}>Commenter</Button>
-                            <Button kind="tertiary" iconDescription="Joindre un fichier" icon={AttachmentIcon} />
+                            <Button icon={ChatIcon} on:click={postComment}>Commenter</Button>
+                            <Button kind="tertiary" iconDescription="Téléverser un fichier" icon={AttachmentIcon} />
                         </div>
                     </div>
                 </Tile>

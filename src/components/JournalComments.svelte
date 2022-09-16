@@ -12,7 +12,7 @@
 
     const processComment = content => content.substring(2)
     const processLegacyComment = content => content.replace(/EOLEOL/g, '\n')
-    const isLegacyComment = content => !content.startsWith(String.fromCharCode(8204))
+    const isLegacyComment = content => !content.startsWith(String.fromCharCode(0x1F))
 </script>
 
 {#if comments.length > 0}
@@ -21,6 +21,7 @@
             <div>
                 {#if comment.type === 'file'}
                     <FileComment comment={comment} />
+                    <p>{comment.filename}</p>
                 {:else if !isLegacyComment(comment.content)}
                     <p class="comment">{processComment(comment.content)}</p>
                 {:else}
