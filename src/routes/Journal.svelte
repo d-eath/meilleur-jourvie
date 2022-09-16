@@ -16,12 +16,17 @@
 
     let currentSession = null
     let pastSessions = []
+    let expandedSessions = {}
 
-    onMount(async () => {
+    const updateJournal = async () => {
+        currentSession = null
+        pastSessions = []
+
         await getSessions()
         await getComments()
         await getFiles()
 
+        // @ts-ignore
         currentSession?.comments.sort((a, b) => b.timestamp - a.timestamp)
 
         for (const session of pastSessions) {
@@ -31,9 +36,8 @@
         currentSession = currentSession
         pastSessions = pastSessions
 
-        // TEST
-        currentSession = pastSessions[0]
-    })
+        console.log('updateJournal()')
+    }
 
     const getSessions = async () => {
         const req = await axios.get(`${VITE_API_URL}/getSessionsTravail.php?devId=${get(userInfo).id}`)
@@ -119,6 +123,8 @@
             session.comments = [...session.comments, newFile]
         }
     }
+
+    onMount(updateJournal)
 </script>
 
 <Base>
@@ -128,7 +134,7 @@
 
     {#if currentSession}
         <div class="current-session">
-            <CurrentSession session={currentSession} />
+            <CurrentSession session={currentSession} on:updatejournal={updateJournal} />
         </div>
         
     {:else}
@@ -138,8 +144,11 @@
                 hideCloseButton
                 kind="info"
                 title="Vous n'avez pas de session active."
-                subtitle="Consultez vos tâches pour démarrer une session."
-            />
+            >
+                <svelte:fragment slot="subtitle">
+                    Consultez vos <a href="#/tasks">tâches</a> pour démarrer une session.
+                </svelte:fragment>
+            </InlineNotification>
         </div>
     {/if}
 
@@ -147,7 +156,7 @@
         <h2>Sessions précédentes</h2>
         <Accordion align="start">
             {#each pastSessions as session}
-                <AccordionItem>
+                <AccordionItem iconDescription="">
                     <PastSessionSummary session={session} slot="title" />
                     <JournalComments comments={session.comments} />
                 </AccordionItem>

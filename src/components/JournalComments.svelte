@@ -70,7 +70,7 @@
         font-size: .95em;
         font-family: monospace;
         background-color: #fafafa;
-        width: 495px;
+        width: 500px;
     }
 
     .legacy-icon {
