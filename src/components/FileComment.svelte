@@ -11,7 +11,7 @@
 
     let showImageView = false
 
-    const src = `${VITE_FILE_URL}/${comment.filename}`
+    $: src = VITE_FILE_URL + '/' + comment.filename
     
     const isImage = () => comment.mimeType.startsWith('image/')
 </script>

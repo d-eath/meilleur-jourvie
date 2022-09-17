@@ -77,7 +77,7 @@
         const req = await axios.post(`${VITE_API_URL}/postCommentaire.php`, stringify({
             devId: get(userInfo).id,
             sessId: session.id,
-            comm: String.fromCharCode(0x1F) + ' ' + commentContent,
+            comm: String.fromCharCode(0x1F) + commentContent,
             acces: get(userInfo).loginToken
         }), {
             headers: {

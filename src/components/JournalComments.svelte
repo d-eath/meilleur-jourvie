@@ -10,7 +10,7 @@
 
     export let comments
 
-    const processComment = content => content.substring(2)
+    const processComment = content => content.substring(1)
     const processLegacyComment = content => content.replace(/EOLEOL/g, '\n')
     const isLegacyComment = content => !content.startsWith(String.fromCharCode(0x1F))
 </script>
@@ -21,7 +21,6 @@
             <div>
                 {#if comment.type === 'file'}
                     <FileComment comment={comment} />
-                    <p>{comment.filename}</p>
                 {:else if !isLegacyComment(comment.content)}
                     <p class="comment">{processComment(comment.content)}</p>
                 {:else}
