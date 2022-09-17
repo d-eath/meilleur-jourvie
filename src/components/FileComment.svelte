@@ -40,8 +40,4 @@
     .filename {
         margin-left: 8px;
     }
-
-    /* a {
-        text-decoration: none;
-    } */
 </style>
