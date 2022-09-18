@@ -22,7 +22,7 @@
     import { onMount } from 'svelte'
     import { get } from 'svelte/store'
     import { location, push } from 'svelte-spa-router'
-    import { stayLoggedIn, userInfo } from '../stores'
+    import { stayLoggedIn, loginInfo, userInfo } from '../stores'
     
     const { VITE_API_URL } = import.meta.env
 
@@ -30,8 +30,8 @@
     let isSideNavOpen = false
     let isProfileOpen = false
 
-    onMount(() => {
-        if (get(userInfo).loginToken) {
+    onMount(async () => {
+        if (get(loginInfo).token) {
             getProjectName()
         }
     })
@@ -45,11 +45,8 @@
     const logout = () => {
         push('/login')
 
-        const currentUserInfo = get(userInfo)
-
         // avoid guard redirect by deleting loginToken
-        delete currentUserInfo.loginToken
-        userInfo.set(currentUserInfo)
+        loginInfo.set({})
         stayLoggedIn.set(false)
 
         // avoid "undefined" world with a delay
@@ -57,7 +54,7 @@
     }
 </script>
 
-{#if $userInfo.loginToken}
+{#if $loginInfo.token}
     <Header company="Meilleur" platformName="Jourvie" bind:isSideNavOpen>
         <HeaderNav>
             <li role="none">

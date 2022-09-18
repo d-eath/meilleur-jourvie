@@ -1,11 +1,14 @@
 import { writable } from 'svelte/store'
 
+// Store: userInfo
+export const userInfo = writable()
+
 // Store: stayLoggedIn
 export const stayLoggedIn = writable(localStorage.getItem('meilleurJourvie.stayLoggedIn') === 'true' || false)
 
 stayLoggedIn.subscribe(value => localStorage.setItem('meilleurJourvie.stayLoggedIn', value.toString()))
 
-// Store: userInfo
+// Store: loginInfo
 let storage = sessionStorage
 let otherStorage = localStorage
 let firstTime = true
@@ -20,14 +23,13 @@ stayLoggedIn.subscribe(value => {
     }
     
     if (!firstTime) {
-        storage.setItem('meilleurJourvie.userInfo', otherStorage.getItem('meilleurJourvie.userInfo') || '{}')
-        otherStorage.removeItem('meilleurJourvie.userInfo')
+        storage.setItem('meilleurJourvie.loginInfo', otherStorage.getItem('meilleurJourvie.loginInfo') || '{}')
+        otherStorage.removeItem('meilleurJourvie.loginInfo')
     } else {
         firstTime = false
     }
-    
 })
 
-export const userInfo = writable(JSON.parse(storage.getItem('meilleurJourvie.userInfo')) || {})
+export const loginInfo = writable(JSON.parse(storage.getItem('meilleurJourvie.loginInfo')) || {})
 
-userInfo.subscribe(value => storage.setItem('meilleurJourvie.userInfo', JSON.stringify(value)))
+loginInfo.subscribe(value => storage.setItem('meilleurJourvie.loginInfo', JSON.stringify(value)))

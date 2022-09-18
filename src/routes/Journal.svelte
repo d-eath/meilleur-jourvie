@@ -10,7 +10,7 @@
     import { onMount } from 'svelte'
     import { get } from 'svelte/store'
     import { stringify } from 'query-string'
-    import { userInfo } from '../stores'
+    import { loginInfo, userInfo } from '../stores'
 
     const { VITE_API_URL } = import.meta.env
 
@@ -69,7 +69,7 @@
 
     const getComments = async () => {
         const req = await axios.post(`${VITE_API_URL}/getCommentaires.php?devId=${get(userInfo).id}`, stringify({
-            acces: get(userInfo).loginToken
+            acces: get(loginInfo).token
         }), {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
@@ -99,7 +99,7 @@
 
     const getFiles = async () => {
         const req = await axios.post(`${VITE_API_URL}/getTeleversements.php?devId=${get(userInfo).id}`, stringify({
-            acces: get(userInfo).loginToken
+            acces: get(loginInfo).token
         }), {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'

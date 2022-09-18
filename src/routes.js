@@ -5,30 +5,30 @@ import Tasks from './routes/Tasks.svelte'
 import Stats from './routes/Stats.svelte'
 import CatchAll from './routes/CatchAll.svelte'
 
-import { userInfo } from './stores'
+import { loginInfo } from './stores'
 import { get } from 'svelte/store'
 import { wrap } from 'svelte-spa-router/wrap'
 
 const routes = {
     '/login': wrap({
         component: Login,
-        conditions: [() => !get(userInfo)?.loginToken]
+        conditions: [() => !get(loginInfo)?.token]
     }),
     '/journal': wrap({
         component: Journal,
-        conditions: [() => get(userInfo)?.loginToken]
+        conditions: [() => get(loginInfo)?.token]
     }),
     '/files': wrap({
         component: Files,
-        conditions: [() => get(userInfo)?.loginToken]
+        conditions: [() => get(loginInfo)?.token]
     }),
     '/tasks': wrap({
         component: Tasks,
-        conditions: [() => get(userInfo)?.loginToken]
+        conditions: [() => get(loginInfo)?.token]
     }),
     '/stats': wrap({
         component: Stats,
-        conditions: [() => get(userInfo)?.loginToken]
+        conditions: [() => get(loginInfo)?.token]
     }),
     '*': CatchAll
 }

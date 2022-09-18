@@ -13,7 +13,7 @@
     import axios from 'axios'
     import { push } from 'svelte-spa-router'
     import { stringify } from 'query-string'
-    import { stayLoggedIn, userInfo } from '../stores'
+    import { stayLoggedIn, loginInfo, userInfo } from '../stores'
 
     const { VITE_API_URL } = import.meta.env
 
@@ -25,7 +25,7 @@
     const login = async () => {
         showLoginFailed = false
 
-        const loginReq = await axios.post(`${VITE_API_URL}/getUnDeveloppeur.php`, stringify({
+        const req = await axios.post(`${VITE_API_URL}/getUnDeveloppeur.php`, stringify({
             matricule: username,
             motPasse: password
         }), {
@@ -37,21 +37,26 @@
         // if the api returns a string (even though it should return a json object,
         // because content-type is application/json), then it means the login failed
         // what the fuck martel?
-        if (typeof loginReq.data !== 'object') {
+        if (typeof req.data !== 'object') {
             showLoginFailed = true
             password = ''
 
             return
         }
 
+        loginInfo.set({
+            id: parseInt(req.data.Id),
+            projectId: parseInt(req.data.ProjetAssigne_Id),
+            token: req.data.EtatConnexion
+        })
+
         userInfo.set({
-            id: parseInt(loginReq.data.Id),
-            lastName: loginReq.data.Nom,
-            firstName: loginReq.data.Prenom,
-            isCoordinator: loginReq.data.EstCoordo === '1',
-            projectId: parseInt(loginReq.data.ProjetAssigne_Id),
-            loginToken: loginReq.data.EtatConnexion,
-            sessionId: loginReq.data.SessionId !== 0 ? parseInt(loginReq.data.SessionId) : null
+            id: parseInt(req.data.Id),
+            lastName: req.data.Nom,
+            firstName: req.data.Prenom,
+            isCoordinator: req.data.EstCoordo === '1',
+            projectId: parseInt(req.data.ProjetAssigne_Id),
+            sessionId: req.data.SessionId !== 0 ? parseInt(req.data.SessionId) : null
         })
 
         push('/journal')

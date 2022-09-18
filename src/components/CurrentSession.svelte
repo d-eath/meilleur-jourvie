@@ -13,7 +13,7 @@
     import { createEventDispatcher } from 'svelte'
     import { get } from 'svelte/store'
     import { stringify } from 'query-string'
-    import { userInfo } from '../stores'
+    import { loginInfo } from '../stores'
 
     const dispatch = createEventDispatcher()
 
@@ -62,8 +62,8 @@
 
     const stopSession = async () => {
         const req = await axios.post(`${VITE_API_URL}/putSessionTravail.php?sessionTravailId=${session.id}`, stringify({
-            devId: get(userInfo).id,
-            acces: get(userInfo).loginToken
+            devId: get(loginInfo).id,
+            acces: get(loginInfo).token
         }), {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
@@ -75,10 +75,10 @@
 
     const postComment = async () => {
         const req = await axios.post(`${VITE_API_URL}/postCommentaire.php`, stringify({
-            devId: get(userInfo).id,
+            devId: get(loginInfo).id,
             sessId: session.id,
             comm: String.fromCharCode(0x1F) + commentContent,
-            acces: get(userInfo).loginToken
+            acces: get(loginInfo).token
         }), {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
@@ -142,7 +142,7 @@
                 <Tile light>
                     <div class="session-actions">
                         <div class="comment-box">
-                            <TextArea maxCount={500} placeholder="Écrivez votre commentaire..." bind:value={commentContent} />
+                            <TextArea maxCount={750} placeholder="Écrivez votre commentaire..." bind:value={commentContent} />
                         </div>
                         <div class="comment-buttons">
                             <Button icon={ChatIcon} on:click={postComment}>Commenter</Button>
