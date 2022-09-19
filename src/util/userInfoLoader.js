@@ -12,7 +12,7 @@ export const loadUserInfo = async () => {
     const token = get(loginInfo)?.token
 
     if (id && !get(userInfo)?.id) {
-        const tokenCheckReq = await axios.post(`${VITE_API_URL}/getDevStats.php?projetId=${projectId}`, stringify({
+        const req = await axios.post(`${VITE_API_URL}/getDevStats.php?projetId=${projectId}`, stringify({
             devId: id,
             acces: token
         }), {
@@ -24,7 +24,7 @@ export const loadUserInfo = async () => {
         // if the api returns a string (even though it should return a json object,
         // because content-type is application/json), then it means the request failed
         // what the fuck martel?
-        if (typeof tokenCheckReq.data !== 'object') {
+        if (typeof req.data !== 'object') {
             loginInfo.set({})
             userInfo.set({})
 
@@ -32,9 +32,9 @@ export const loadUserInfo = async () => {
             return
         }
 
-        const usersFetchReq = await axios.get(`${VITE_API_URL}/getDeveloppeurs.php`)
-        const user = usersFetchReq.data.find(u => parseInt(u.Id) === id)
-        const currentSession = user.sessionsTravail.find(s => s.Fin === null)
+        const user = req.data.find(u => parseInt(u.Id) === id)
+        const sessionsReq = await axios.get(`${VITE_API_URL}/getSessionsTravail.php?devId=${id}`)
+        const currentSession = sessionsReq.data.find(s => s.Fin === null)
 
         userInfo.set({
             id: id,

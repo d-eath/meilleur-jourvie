@@ -1,5 +1,5 @@
 <script>
-    import { Accordion, AccordionItem, InlineNotification } from 'carbon-components-svelte'
+    import { Accordion, AccordionItem, InlineNotification, Loading } from 'carbon-components-svelte'
 
     import Base from '../components/Base.svelte'
     import CurrentSession from '../components/CurrentSession.svelte'
@@ -18,7 +18,8 @@
     let _pastSessions = []
     let currentSession = null
     let pastSessions = []
-    let expandedSessions = {}
+    let isLoaded = false
+    const expandedSessions = {}
 
     const updateJournal = async () => {
         _currentSession = null
@@ -38,8 +39,7 @@
         currentSession = _currentSession
         pastSessions = _pastSessions
 
-        console.log(currentSession)
-        console.log(pastSessions)
+        isLoaded = true
     }
 
     const getSessions = async () => {
@@ -133,38 +133,41 @@
 <Base>
     <h1>Journal</h1>
 
-    <h2>Session active</h2>
+    {#if isLoaded}
+        <h2>Session active</h2>
 
-    {#if currentSession}
-        <div class="current-session">
-            <CurrentSession session={currentSession} on:updatejournal={updateJournal} />
-        </div>
-        
+        {#if currentSession}
+            <div class="current-session">
+                <CurrentSession session={currentSession} on:updatejournal={updateJournal} />
+            </div>
+        {:else}
+            <div class="no-active-session-info">
+                <InlineNotification
+                    lowContrast
+                    hideCloseButton
+                    kind="info"
+                    title="Vous n'avez pas de session active."
+                >
+                    <svelte:fragment slot="subtitle">
+                        Consultez vos <a href="#/tasks">tâches</a> pour démarrer une session.
+                    </svelte:fragment>
+                </InlineNotification>
+            </div>
+        {/if}
+
+        {#if pastSessions.length > 0}
+            <h2>Sessions précédentes</h2>
+            <Accordion align="start">
+                {#each pastSessions as session}
+                    <AccordionItem iconDescription="" bind:open={expandedSessions[session.id]}>
+                        <PastSessionSummary session={session} slot="title" />
+                        <JournalComments comments={session.comments} />
+                    </AccordionItem>
+                {/each}
+            </Accordion>
+        {/if}
     {:else}
-        <div class="no-active-session-info">
-            <InlineNotification
-                lowContrast
-                hideCloseButton
-                kind="info"
-                title="Vous n'avez pas de session active."
-            >
-                <svelte:fragment slot="subtitle">
-                    Consultez vos <a href="#/tasks">tâches</a> pour démarrer une session.
-                </svelte:fragment>
-            </InlineNotification>
-        </div>
-    {/if}
-
-    {#if pastSessions.length > 0}
-        <h2>Sessions précédentes</h2>
-        <Accordion align="start">
-            {#each pastSessions as session}
-                <AccordionItem iconDescription="" bind:open={expandedSessions[session.id]}>
-                    <PastSessionSummary session={session} slot="title" />
-                    <JournalComments comments={session.comments} />
-                </AccordionItem>
-            {/each}
-        </Accordion>
+        <Loading />
     {/if}
 </Base>
 
