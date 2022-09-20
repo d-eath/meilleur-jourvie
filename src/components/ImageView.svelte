@@ -46,6 +46,10 @@
         margin-top: 12px;
         text-decoration: none;
         font-weight: bold;
+        color: #ccc;
+    }
+
+    a:hover {
         color: #eee;
     }
 </style>
