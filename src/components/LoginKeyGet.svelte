@@ -83,11 +83,18 @@
     <h5>Régénénation de clé de connexion</h5>
     <p>
         Vous pouvez régénérer votre clé de connexion en entrant votre mot de passe Jourvie.
-        Cette opération invalidera toute clé de connexion précédente associée à votre compte Jourvie.
+        Cette opération invalidera toute clé de connexion associée à votre compte Jourvie.
         À utiliser si votre clé de connexion actuelle est volée.
     </p>
     <div>
-        <PasswordInput labelText="Votre mot de passe" bind:value={password} on:keydown={e => { if (e.key === 'Enter') regenKey() }} />
+        <PasswordInput
+            labelText="Votre mot de passe"
+            hidePasswordLabel="Cacher le mot de passe"
+            showPasswordLabel="Afficher le mot de passe"
+            tooltipAlignment="end"
+            bind:value={password}
+            on:keydown={e => { if (e.key === 'Enter') regenKey() }}
+        />
     </div>
     <Button kind="danger" icon={VirtualColumnKey} on:click={regenKey}>Régénérer la clé de connexion</Button>
 </Modal>

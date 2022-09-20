@@ -13,6 +13,10 @@
     let loginKey
 
     const login = async () => {
+        if (!canLogin) {
+            return
+        }
+
         const key = loginKey.trim()
 
         canLogin = false
@@ -51,7 +55,16 @@
     export let open = false
 </script>
 
-<Modal size="sm" passiveModal modalHeading="Clé de connexion" bind:open>
+<Modal
+    size="sm"
+    modalHeading="Clé de connexion"
+    primaryButtonText="Connexion"
+    secondaryButtonText="Annuler"
+    primaryButtonDisabled={!canLogin}
+    on:click:button--primary={login}
+    on:click:button--secondary={() => open = false}
+    bind:open
+>
     {#if isLoginErrorShown}
         <InlineNotification
             lowContrast
@@ -70,16 +83,17 @@
     </p>
 
     <div class="textarea-no-resize">
-        <TextArea rows={3} placeholder="Clé de connexion" bind:value={loginKey} on:keydown={e => { if (e.key === 'Enter') { e.preventDefault(); login() } }} />
+        <TextArea
+            rows={3}
+            placeholder="Collez votre clé de connexion ici..."
+            bind:value={loginKey}
+            on:keydown={e => { if (e.key === 'Enter') { e.preventDefault(); login() } }}
+        />
     </div>
     
     <p><span class="bold">Important:</span> N'utilisez pas plusieurs instances de Jourvie simultanément.</p>
 
-    <div>
-        <Checkbox labelText="Rester connecté" bind:checked={$stayLoggedIn} />
-    </div>
-
-    <Button icon={LoginIcon} disabled={!canLogin} on:click={login}>Connexion</Button>
+    <Checkbox labelText="Rester connecté" bind:checked={$stayLoggedIn} />
 </Modal>
 
 <style>
