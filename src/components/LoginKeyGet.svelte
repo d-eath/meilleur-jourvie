@@ -14,6 +14,11 @@
     let password
     let loginKey = ''
 
+    $: if (!open) {
+        isRegenErrorShown = false
+        password = ''
+    }
+
     loginInfo.subscribe(info => {
         const { id, username, projectId, token } = info
 

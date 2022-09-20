@@ -1,8 +1,6 @@
 <script>
     import { Button, Checkbox, InlineNotification, Modal, TextArea } from 'carbon-components-svelte'
 
-    import LoginIcon from 'carbon-icons-svelte/lib/Login.svelte'
-    
     import { stayLoggedIn, loginInfo } from '../stores'
     
     import { push } from 'svelte-spa-router'
@@ -11,6 +9,11 @@
     let canLogin = true
     let isLoginErrorShown = false
     let loginKey
+
+    $: if (!open) {
+        isLoginErrorShown = false
+        loginKey = ''
+    }
 
     const login = async () => {
         if (!canLogin) {
