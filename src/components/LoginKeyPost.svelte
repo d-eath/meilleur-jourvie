@@ -24,8 +24,9 @@
             const decodedKey = window.atob(key).split(';')
 
             login.id = parseInt(decodedKey[0])
-            login.projectId = parseInt(decodedKey[1])
-            login.token = decodedKey[2]
+            login.username = decodedKey[1]
+            login.projectId = parseInt(decodedKey[2])
+            login.token = decodedKey[3]
         } catch {
             isLoginErrorShown = true
             canLogin = true
@@ -35,7 +36,7 @@
 
         loginInfo.set(login)
 
-        const success = await loadUserInfo(true)
+        const success = await loadUserInfo(login.username, true)
 
         if (!success) {
             isLoginErrorShown = true
@@ -69,7 +70,7 @@
     </p>
 
     <div class="textarea-no-resize">
-        <TextArea rows={3} placeholder="Clé de connexion" bind:value={loginKey} />
+        <TextArea rows={3} placeholder="Clé de connexion" bind:value={loginKey} on:keydown={e => { if (e.key === 'Enter') { e.preventDefault(); login() } }} />
     </div>
     
     <p><span class="bold">Important:</span> N'utilisez pas plusieurs instances de Jourvie simultanément.</p>

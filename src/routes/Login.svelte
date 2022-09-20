@@ -62,6 +62,7 @@
 
         loginInfo.set({
             id: parseInt(req.data.Id),
+            username: req.data.Matricule,
             projectId: parseInt(req.data.ProjetAssigne_Id),
             token: req.data.EtatConnexion
         })

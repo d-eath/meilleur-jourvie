@@ -6,7 +6,7 @@ import { stringify } from 'query-string'
 
 const { VITE_API_URL } = import.meta.env
 
-export const loadUserInfo = async (returnMode = false) => {
+export const loadUserInfo = async (username, noRedirect = false) => {
     const id = get(loginInfo)?.id
     const projectId = get(loginInfo)?.projectId
     const token = get(loginInfo)?.token
@@ -28,7 +28,7 @@ export const loadUserInfo = async (returnMode = false) => {
             loginInfo.set({})
             userInfo.set({})
 
-            if (!returnMode) {
+            if (!noRedirect) {
                 replace('/')
             }
             
@@ -38,6 +38,17 @@ export const loadUserInfo = async (returnMode = false) => {
         const user = req.data.find(u => parseInt(u.Id) === id)
         const sessionsReq = await axios.get(`${VITE_API_URL}/getSessionsTravail.php?devId=${id}`)
         const currentSession = sessionsReq.data.find(s => s.Fin === null)
+
+        if (username && user.Matricule !== username) {
+            loginInfo.set({})
+            userInfo.set({})
+
+            if (!noRedirect) {
+                replace('/')
+            }
+            
+            return false
+        }
 
         userInfo.set({
             id: id,
