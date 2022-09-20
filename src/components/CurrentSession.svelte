@@ -1,10 +1,19 @@
 <script>
-    import { Button, Column, Grid, Row, Tag, TextArea, Tile } from 'carbon-components-svelte'
+    import {
+        Button,
+        Column,
+        Grid,
+        Row,
+        Tag,
+        TextArea,
+        Tile
+    } from 'carbon-components-svelte'
 
     import ChatIcon from 'carbon-icons-svelte/lib/Chat.svelte'
     import AttachmentIcon from 'carbon-icons-svelte/lib/Attachment.svelte'
     import StopIcon from 'carbon-icons-svelte/lib/Stop.svelte'
 
+    import FileUpload from '../components/FileUpload.svelte'
     import JournalComments from '../components/JournalComments.svelte'
 
     import axios from 'axios'
@@ -17,11 +26,12 @@
 
     const dispatch = createEventDispatcher()
 
-    let commentContent
-
+    let commentContent = ''
     let secondsElapsed = 0
     let timeElapsed
     let commentsPerHour
+    let showFileUploadModal = false
+    let canComment = true
 
     const { VITE_API_URL } = import.meta.env
 
@@ -74,6 +84,12 @@
     }
 
     const postComment = async () => {
+        if (commentContent.length === 0) {
+            return
+        }
+
+        canComment = false
+
         const req = await axios.post(`${VITE_API_URL}/postCommentaire.php`, stringify({
             devId: get(loginInfo).id,
             sessId: session.id,
@@ -86,6 +102,7 @@
         })
 
         commentContent = ''
+        canComment = true
 
         dispatch('updatejournal')
     }
@@ -142,11 +159,17 @@
                 <Tile light>
                     <div class="session-actions">
                         <div class="comment-box">
-                            <TextArea maxCount={750} placeholder="Écrivez votre commentaire..." bind:value={commentContent} />
+                            <TextArea maxCount={750} placeholder="Écrivez votre commentaire..." disabled={!canComment} bind:value={commentContent} />
                         </div>
                         <div class="comment-buttons">
-                            <Button icon={ChatIcon} on:click={postComment}>Commenter</Button>
-                            <Button kind="tertiary" iconDescription="Téléverser un fichier" icon={AttachmentIcon} />
+                            <Button disabled={commentContent.length === 0 && !canComment} icon={ChatIcon} on:click={postComment}>Commenter</Button>
+                            <Button
+                                kind="tertiary"
+                                iconDescription="Téléverser un fichier"
+                                icon={AttachmentIcon}
+                                tooltipPosition="right"
+                                on:click={() => showFileUploadModal = true}
+                            />
                         </div>
                     </div>
                 </Tile>
@@ -161,6 +184,8 @@
         </Row>
     </Grid>
 </Tile>
+
+<FileUpload bind:open={showFileUploadModal} on:updatejournal />
 
 <style>
     .comment-icons {

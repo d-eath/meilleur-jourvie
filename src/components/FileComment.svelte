@@ -3,22 +3,23 @@
 
     import AttachmentIcon from 'carbon-icons-svelte/lib/Attachment.svelte'
 
-    const { VITE_FILE_URL } = import.meta.env
-
     import ImageView from './ImageView.svelte'
+
+    const { VITE_FILE_URL } = import.meta.env
 
     export let comment
 
     let showImageView = false
+    let imageError = null
 
     $: src = VITE_FILE_URL + '/' + comment.filename
-    
+
     const isImage = () => comment.mimeType.startsWith('image/')
 </script>
 
 <p>
-    {#if isImage()}
-        <img src={src} alt="" on:click={() => showImageView = true} />
+    {#if isImage() && imageError !== src}
+        <img src={src} alt="" on:click={() => showImageView = true} on:error={() => imageError = src} />
     {:else}
         <Button kind="ghost" on:click={() => window.open(src, '_blank')}>
             <AttachmentIcon /> <div class="filename">{comment.filename}</div>
