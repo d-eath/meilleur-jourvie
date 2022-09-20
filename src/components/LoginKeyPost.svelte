@@ -1,5 +1,5 @@
 <script>
-    import { Button, Checkbox, InlineNotification, Modal, TextArea } from 'carbon-components-svelte'
+    import { Checkbox, InlineNotification, Modal, TextArea } from 'carbon-components-svelte'
 
     import { stayLoggedIn, loginInfo } from '../stores'
     

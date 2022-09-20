@@ -1,5 +1,8 @@
 import { writable } from 'svelte/store'
 
+// Store: loginMessage
+export const loginMessage = writable()
+
 // Store: userInfo
 export const userInfo = writable()
 

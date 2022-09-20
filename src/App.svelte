@@ -2,6 +2,8 @@
     import { onMount } from 'svelte'
     import { loadUserInfo } from './util/userInfoLoader'
 
+    import './util/sessionChecker'
+
     let ready = false
 
     onMount(async () => {
