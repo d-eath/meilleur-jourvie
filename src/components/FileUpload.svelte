@@ -7,7 +7,7 @@
     import { loginInfo, userInfo } from '../stores'
 
     const { VITE_API_URL } = import.meta.env
-    const allowedFileExtensions = ['jpg', 'png', 'gif', 'pdf', 'txt']
+    const ALLOWED_FILE_EXT = ['jpg', 'png', 'gif', 'pdf', 'txt']
 
     const dispatch = createEventDispatcher()
 
@@ -54,8 +54,8 @@
     $: {
         if (file) {
             if (file.size > 512000) {
-                error = 'Taille du fichier trop grande.'
-            } else if (!allowedFileExtensions.includes(file.name.split('.').at(-1))) {
+                error = 'Taille de fichier trop lourde.'
+            } else if (!ALLOWED_FILE_EXT.includes(file.name.split('.').at(-1))) {
                 error = 'Extension de fichier non autorisé.'
             } else {
                 error = ''
