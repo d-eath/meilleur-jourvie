@@ -83,7 +83,7 @@
     <h5>Régénénation de clé de connexion</h5>
     <p>
         Vous pouvez régénérer votre clé de connexion en entrant votre mot de passe Jourvie.
-        Cette opération invalidera toute clé de connexion associée à votre compte Jourvie.
+        Cette opération invalidera toute clé de connexion actuelle associée à votre compte Jourvie.
         À utiliser si votre clé de connexion actuelle est volée.
     </p>
     <div>
