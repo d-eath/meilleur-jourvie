@@ -162,7 +162,7 @@
                             <TextArea maxCount={750} placeholder="Écrivez votre commentaire..." disabled={!canComment} bind:value={commentContent} />
                         </div>
                         <div class="comment-buttons">
-                            <Button disabled={commentContent.length === 0 && !canComment} icon={ChatIcon} on:click={postComment}>Commenter</Button>
+                            <Button disabled={commentContent.length === 0 || !canComment} icon={ChatIcon} on:click={postComment}>Commenter</Button>
                             <Button
                                 kind="tertiary"
                                 iconDescription="Téléverser un fichier"
