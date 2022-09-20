@@ -10,6 +10,8 @@
 
     import LoginIcon from 'carbon-icons-svelte/lib/Login.svelte'
 
+    import LoginKeyPost from '../components/LoginKeyPost.svelte'
+
     import axios from 'axios'
     import { push } from 'svelte-spa-router'
     import { stringify } from 'query-string'
@@ -19,11 +21,20 @@
 
     let username
     let password
-    let showSecurityModal = false
-    let showLoginFailed = false
+    let canLogin = true
+    let isLoginErrorShown = false
+    let isSecurityModalOpen = false
+    let isLoginKeyOpen = false
+
+    const loginErrorInfo = {
+        title: undefined,
+        subtitle: undefined,
+        kind: undefined
+    }
 
     const login = async () => {
-        showLoginFailed = false
+        isLoginErrorShown = false
+        canLogin = false
 
         const req = await axios.post(`${VITE_API_URL}/getUnDeveloppeur.php`, stringify({
             matricule: username,
@@ -38,7 +49,12 @@
         // because content-type is application/json), then it means the login failed
         // what the fuck martel?
         if (typeof req.data !== 'object') {
-            showLoginFailed = true
+            loginErrorInfo.title = 'Connexion échouée'
+            loginErrorInfo.subtitle = 'Veuillez revérifier vos informations de connexion et réessayez.'
+            loginErrorInfo.kind = 'error'
+
+            isLoginErrorShown = true
+            canLogin = true
             password = ''
 
             return
@@ -69,15 +85,15 @@
             <h1 class="login-header">Meilleur Jourvie</h1>
             <p class="login-header">Connectez-vous avec votre compte Jourvie actuel</p>
 
-            {#if showLoginFailed}
+            {#if isLoginErrorShown}
                 <InlineNotification
                     lowContrast
-                    kind="error"
-                    title="Connexion échouée"
-                    subtitle="Veuillez revérifier vos informations de connexion et réessayez."
+                    kind={loginErrorInfo.kind}
+                    title={loginErrorInfo.title}
+                    subtitle={loginErrorInfo.subtitle}
                     on:close={e => {
                         e.preventDefault()
-                        showLoginFailed = false
+                        isLoginErrorShown = false
                     }}
                 />
             {/if}
@@ -92,11 +108,11 @@
                 <Checkbox labelText="Rester connecté" bind:checked={$stayLoggedIn} />
             </div>
             
-            <Button icon={LoginIcon} on:click={login}>Connexion</Button>
-            <Button kind="ghost">Utiliser une clé de connexion</Button>
+            <Button icon={LoginIcon} on:click={login} disabled={!canLogin}>Connexion</Button>
+            <Button kind="ghost" on:click={() => isLoginKeyOpen = true}>Utiliser une clé de connexion</Button>
         </div>
         <div class="footer">
-            <a class="security-modal-link" href={null} on:click={() => showSecurityModal = true}>
+            <a class="security-modal-link" href={null} on:click={() => isSecurityModalOpen = true}>
                 Avis sur les risques de sécurité de Meilleur Jourvie
             </a>
             <div class="credit-footer">
@@ -106,7 +122,7 @@
     </div>
 </div>
 
-<Modal passiveModal modalHeading="Avis sur les risques de sécurité de Meilleur Jourvie" bind:open={showSecurityModal}>
+<Modal passiveModal modalHeading="Avis sur les risques de sécurité de Meilleur Jourvie" bind:open={isSecurityModalOpen}>
     <p class="modal-text">
         Cette application fait appel à un serveur « proxy » hébergé par le
         mainteneur de l'application pour contourner les
@@ -127,6 +143,8 @@
         l'application à vos risques et périls.</span>
     </p>
 </Modal>
+
+<LoginKeyPost bind:open={isLoginKeyOpen} />
 
 <style>
     .outer {

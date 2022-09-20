@@ -22,7 +22,8 @@
         <img src={src} alt="" on:click={() => showImageView = true} on:error={() => imageError = src} />
     {:else}
         <Button kind="ghost" on:click={() => window.open(src, '_blank')}>
-            <AttachmentIcon /> <div class="filename">{comment.filename}</div>
+            <div><AttachmentIcon /></div>
+            <div class="filename">{comment.filename}</div>
         </Button>
     {/if}
 </p>
@@ -33,8 +34,8 @@
 
 <style>
     img {
-        max-width: 500px;
-        max-height: 500px;
+        max-width: 300px;
+        max-height: 200px;
         cursor: pointer;
     }
 

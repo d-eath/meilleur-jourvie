@@ -6,7 +6,7 @@ import { stringify } from 'query-string'
 
 const { VITE_API_URL } = import.meta.env
 
-export const loadUserInfo = async () => {
+export const loadUserInfo = async (returnMode = false) => {
     const id = get(loginInfo)?.id
     const projectId = get(loginInfo)?.projectId
     const token = get(loginInfo)?.token
@@ -28,8 +28,11 @@ export const loadUserInfo = async () => {
             loginInfo.set({})
             userInfo.set({})
 
-            replace('/')
-            return
+            if (!returnMode) {
+                replace('/')
+            }
+            
+            return false
         }
 
         const user = req.data.find(u => parseInt(u.Id) === id)
@@ -44,5 +47,7 @@ export const loadUserInfo = async () => {
             projectId: parseInt(user.ProjetAssigne_Id),
             sessionId: currentSession?.Id || null
         })
+
+        return true
     }
 }

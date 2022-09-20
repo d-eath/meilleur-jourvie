@@ -4,7 +4,7 @@
     import axios from 'axios'
     import { createEventDispatcher } from 'svelte'
     import { get } from 'svelte/store'
-    import { loginInfo, userInfo } from '../stores'
+    import { loginInfo } from '../stores'
 
     const { VITE_API_URL } = import.meta.env
     const ALLOWED_FILE_EXT = ['jpg', 'png', 'gif', 'pdf', 'txt']
@@ -27,8 +27,8 @@
         const formData = new FormData()
 
         formData.append('file', file)
-        formData.append('idProjet', get(userInfo).projectId)
-        formData.append('devId', get(userInfo).id)
+        formData.append('idProjet', get(loginInfo).projectId)
+        formData.append('devId', get(loginInfo).id)
         formData.append('acces', get(loginInfo).token)
         formData.append('extension', file.name.split('.').at(-1))
 

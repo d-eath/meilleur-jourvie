@@ -20,7 +20,7 @@
         position: fixed;
         width: 100%;
         height: 100%;
-        background-color: rgba(0,0,0,0.75);
+        background-color: rgba(0, 0, 0, 0.69);
         top: 0;
         left: 0;
         right: 0;
@@ -43,7 +43,7 @@
 
     a {
         display: block;
-        margin-top: 8px;
+        margin-top: 12px;
         text-decoration: none;
         font-weight: bold;
         color: #eee;

@@ -18,6 +18,8 @@
     import UserAvatarFilledAltIcon from 'carbon-icons-svelte/lib/UserAvatarFilledAlt.svelte'
     import VolumeFileStorageIcon from 'carbon-icons-svelte/lib/VolumeFileStorage.svelte'
 
+    import LoginKeyGet from './LoginKeyGet.svelte'
+
     import axios from 'axios'
     import { onMount } from 'svelte'
     import { get } from 'svelte/store'
@@ -29,6 +31,7 @@
     let projectName
     let isSideNavOpen = false
     let isProfileOpen = false
+    let isLoginKeyOpen = false
 
     onMount(async () => {
         if (get(loginInfo).token) {
@@ -85,6 +88,7 @@
                         </div>
                     </li>
                     <HeaderPanelDivider />
+                    <HeaderPanelLink on:click={() => isLoginKeyOpen = true}>Clé de connexion</HeaderPanelLink>
                     <HeaderPanelLink on:click={logout}>Déconnexion</HeaderPanelLink>
                 </HeaderPanelLinks>
             </HeaderAction>
@@ -100,6 +104,8 @@
         </SideNavItems>
     </SideNav>
 {/if}
+
+<LoginKeyGet bind:open={isLoginKeyOpen} />
 
 <style>
     .project-header {
@@ -155,6 +161,6 @@
     }
 
     :global(.bx--header-panel--expanded) {
-        height: 125px;
+        height: 150px;
     }
 </style>

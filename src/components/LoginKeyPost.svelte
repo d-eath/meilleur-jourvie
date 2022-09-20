@@ -1,0 +1,100 @@
+<script>
+    import { Button, Checkbox, InlineNotification, Modal, TextArea } from 'carbon-components-svelte'
+
+    import LoginIcon from 'carbon-icons-svelte/lib/Login.svelte'
+    
+    import { stayLoggedIn, loginInfo } from '../stores'
+    
+    import { push } from 'svelte-spa-router'
+    import { loadUserInfo } from '../util/userInfoLoader'
+
+    let canLogin = true
+    let isLoginErrorShown = false
+    let loginKey
+
+    const login = async () => {
+        const key = loginKey.trim()
+
+        canLogin = false
+        loginKey = ''
+
+        let login = {}
+
+        try {
+            const decodedKey = window.atob(key).split(';')
+
+            login.id = parseInt(decodedKey[0])
+            login.projectId = parseInt(decodedKey[1])
+            login.token = decodedKey[2]
+        } catch {
+            isLoginErrorShown = true
+            canLogin = true
+
+            return
+        }
+
+        loginInfo.set(login)
+
+        const success = await loadUserInfo(true)
+
+        if (!success) {
+            isLoginErrorShown = true
+            canLogin = true
+
+            return
+        }
+
+        push('/journal')
+    }
+
+    export let open = false
+</script>
+
+<Modal size="sm" passiveModal modalHeading="Clé de connexion" bind:open>
+    {#if isLoginErrorShown}
+        <InlineNotification
+            lowContrast
+            kind="error"
+            title="Connexion échouée"
+            subtitle="La clé de connexion semble être invalide."
+            on:close={e => {
+                e.preventDefault()
+                isLoginErrorShown = false
+            }}
+        />
+    {/if}
+    <p>
+        Le serveur Jourvie ne permet normalement pas d'avoir plusieurs connexion actives.
+        Pour contourner cette restriction, vous pouvez vous connecter en utilisant une clé de connexion acquise sur une connexion prédédente:
+    </p>
+
+    <div class="textarea-no-resize">
+        <TextArea rows={3} placeholder="Clé de connexion" bind:value={loginKey} />
+    </div>
+    
+    <p><span class="bold">Important:</span> N'utilisez pas plusieurs instances de Jourvie simultanément.</p>
+
+    <div>
+        <Checkbox labelText="Rester connecté" bind:checked={$stayLoggedIn} />
+    </div>
+
+    <Button icon={LoginIcon} disabled={!canLogin} on:click={login}>Connexion</Button>
+</Modal>
+
+<style>
+    p, div {
+        margin-bottom: 1rem;
+    }
+
+    .textarea-no-resize :global(textarea) {
+        resize: none;
+    }
+
+    .bold {
+        font-weight: bold;
+    }
+
+    :global(.bx--inline-notification__title) {
+        font-weight: bold !important;
+    }
+</style>
