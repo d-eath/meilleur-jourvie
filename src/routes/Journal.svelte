@@ -6,12 +6,9 @@
     import JournalComments from '../components/JournalComments.svelte'
     import PastSessionSummary from '../components/PastSessionSummary.svelte'
 
-    import axios from 'axios'
     import { onMount } from 'svelte'
     import { get } from 'svelte/store'
-    import { stringify } from 'query-string'
     import { loginInfo, userInfo } from '../stores'
-
     import { httpGet, httpPost } from '../util/httpRequest'
 
     let _currentSession = null
