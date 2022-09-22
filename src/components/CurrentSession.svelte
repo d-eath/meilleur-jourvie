@@ -121,7 +121,7 @@
         </Row>
         <Row>
             <Column>
-                <Tag type="green" size="sm">{session.task.number}</Tag>
+                <Tag type="blue" size="sm">{session.task.number}</Tag>
             </Column>
             <Column>
                 <span class="session-data">

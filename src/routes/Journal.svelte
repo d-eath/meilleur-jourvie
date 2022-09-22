@@ -145,7 +145,7 @@
     <h1>Journal</h1>
 
     {#if isLoaded}
-        <h2>Session active</h2>
+        <h2>Session en cours</h2>
 
         {#if currentSession}
             <div class="current-session">

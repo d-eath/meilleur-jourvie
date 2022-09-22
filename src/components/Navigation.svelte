@@ -19,6 +19,7 @@
     import VolumeFileStorageIcon from 'carbon-icons-svelte/lib/VolumeFileStorage.svelte'
 
     import LoginKeyGet from './LoginKeyGet.svelte'
+    import CurrentSessionFloating from './CurrentSessionFloating.svelte'
 
     import { onMount } from 'svelte'
     import { get } from 'svelte/store'
@@ -105,6 +106,8 @@
             <SideNavLink icon={ChartColumnIcon} href="#/stats" isSelected={$location === '/stats'} text="Statistiques" />
         </SideNavItems>
     </SideNav>
+
+    <CurrentSessionFloating />
 {/if}
 
 <LoginKeyGet bind:open={isLoginKeyOpen} />
