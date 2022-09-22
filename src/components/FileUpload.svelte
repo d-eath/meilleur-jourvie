@@ -1,12 +1,11 @@
 <script>
     import { FileUploaderDropContainer, FileUploaderItem, Modal } from 'carbon-components-svelte'
 
-    import axios from 'axios'
     import { createEventDispatcher } from 'svelte'
     import { get } from 'svelte/store'
     import { loginInfo } from '../stores'
+    import { httpPostFormData } from '../util/httpRequest'
 
-    const { VITE_API_URL } = import.meta.env
     const ALLOWED_FILE_EXT = ['jpg', 'png', 'gif', 'pdf', 'txt']
 
     const dispatch = createEventDispatcher()
@@ -24,18 +23,12 @@
 
         readyToUpload = false
 
-        const formData = new FormData()
-
-        formData.append('file', file)
-        formData.append('idProjet', get(loginInfo).projectId)
-        formData.append('devId', get(loginInfo).id)
-        formData.append('acces', get(loginInfo).token)
-        formData.append('extension', file.name.split('.').at(-1))
-
-        const req = await axios.post(`${VITE_API_URL}/televerseFichier.php`, formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
+        await httpPostFormData(`/televerseFichier.php`, {
+            file,
+            idProjet: get(loginInfo).projectId,
+            devId: get(loginInfo).id,
+            acces: get(loginInfo).token,
+            extension: file.name.split('.').at(-1)
         })
 
         open = false

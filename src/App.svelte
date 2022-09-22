@@ -2,8 +2,6 @@
     import { onMount } from 'svelte'
     import { loadUserInfo } from './util/userInfoLoader'
 
-    import './util/httpRequest'
-
     let ready = false
 
     onMount(async () => {

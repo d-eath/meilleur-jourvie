@@ -3,12 +3,9 @@
 
     import VirtualColumnKey from 'carbon-icons-svelte/lib/VirtualColumnKey.svelte'
 
-    import axios from 'axios'
     import { loginInfo } from '../stores'
-    import { stringify } from 'query-string'
     import { get } from 'svelte/store'
-
-    const { VITE_API_URL } = import.meta.env
+    import { httpPost } from '../util/httpRequest'
 
     let isRegenErrorShown = false
     let password
@@ -32,19 +29,12 @@
 
         const { username } = get(loginInfo)
 
-        const req = await axios.post(`${VITE_API_URL}/getUnDeveloppeur.php`, stringify({
+        const req = await httpPost('/getUnDeveloppeur.php', {
             matricule: username,
             motPasse: password
-        }), {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-            },
-        })
+        }, false)
 
-        // if the api returns a string (even though it should return a json object,
-        // because content-type is application/json), then it means the login failed
-        // what the fuck martel?
-        if (typeof req.data !== 'object') {
+        if (!req.returnedJson) {
             isRegenErrorShown = true
             password = ''
 

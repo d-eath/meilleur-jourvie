@@ -20,13 +20,11 @@
 
     import LoginKeyGet from './LoginKeyGet.svelte'
 
-    import axios from 'axios'
     import { onMount } from 'svelte'
     import { get } from 'svelte/store'
     import { location, push } from 'svelte-spa-router'
     import { stayLoggedIn, loginInfo, userInfo } from '../stores'
-    
-    const { VITE_API_URL } = import.meta.env
+    import { httpGet } from '../util/httpRequest'
 
     let projectName
     let isSideNavOpen = false
@@ -40,7 +38,11 @@
     })
 
     const getProjectName = async () => {
-        const req = await axios.get(`${VITE_API_URL}/getNomProjet.php?projetId=${get(userInfo).projectId}`)
+        const req = await httpGet(`/getNomProjet.php?projetId=${get(userInfo).projectId}`)
+
+        if (!req.returnedJson) {
+            return
+        }
 
         projectName = req.data.Nom
     }

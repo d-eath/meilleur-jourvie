@@ -16,13 +16,12 @@
     import FileUpload from '../components/FileUpload.svelte'
     import JournalComments from '../components/JournalComments.svelte'
 
-    import axios from 'axios'
     import 'dayjs/locale/fr'
     import dayjs from 'dayjs'
     import { createEventDispatcher } from 'svelte'
     import { get } from 'svelte/store'
-    import { stringify } from 'query-string'
     import { loginInfo } from '../stores'
+    import { httpPost } from '../util/httpRequest'
 
     const dispatch = createEventDispatcher()
 
@@ -32,8 +31,6 @@
     let commentsPerHour
     let showFileUploadModal = false
     let canComment = true
-
-    const { VITE_API_URL } = import.meta.env
 
     setInterval(() => {
         secondsElapsed = dayjs().diff(dayjs(session.timestampStart), 'second')
@@ -71,15 +68,11 @@
     }
 
     const stopSession = async () => {
-        const req = await axios.post(`${VITE_API_URL}/putSessionTravail.php?sessionTravailId=${session.id}`, stringify({
+        await httpPost(`/putSessionTravail.php?sessionTravailId=${session.id}`, {
             devId: get(loginInfo).id,
             acces: get(loginInfo).token
-        }), {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-            }
         })
-        
+
         dispatch('updatejournal')
     }
 
@@ -90,15 +83,11 @@
 
         canComment = false
 
-        const req = await axios.post(`${VITE_API_URL}/postCommentaire.php`, stringify({
+        await httpPost('/postCommentaire.php', {
             devId: get(loginInfo).id,
             sessId: session.id,
             comm: String.fromCharCode(0x1F) + commentContent,
             acces: get(loginInfo).token
-        }), {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-            }
         })
 
         commentContent = ''
