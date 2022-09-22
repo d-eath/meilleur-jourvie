@@ -70,7 +70,7 @@
         />
     {/if}
     <p>
-        Le serveur Jourvie ne permet normalement pas d'avoir plusieurs connexion actives.
+        Le serveur Jourvie ne permet normalement pas d'avoir plusieurs connexions actives.
         Pour contourner cette restriction, vous pouvez utiliser la clé de connexion suivante à votre prochaine connexion:
     </p>
     <CodeSnippet code={loginKey} type="multi" wrapText feedback="Copiée!" />

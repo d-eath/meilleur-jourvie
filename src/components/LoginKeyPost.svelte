@@ -81,7 +81,7 @@
         />
     {/if}
     <p>
-        Le serveur Jourvie ne permet normalement pas d'avoir plusieurs connexion actives.
+        Le serveur Jourvie ne permet normalement pas d'avoir plusieurs connexions actives.
         Pour contourner cette restriction, vous pouvez vous connecter en utilisant une clé de connexion acquise sur une connexion prédédente:
     </p>
 
