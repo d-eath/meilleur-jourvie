@@ -12,25 +12,26 @@
 
     import LoginKeyPost from '../components/LoginKeyPost.svelte'
 
+    import { onMount } from 'svelte'
+    import { get } from 'svelte/store'
     import { push } from 'svelte-spa-router'
-    import { stayLoggedIn, loginInfo, userInfo } from '../stores'
+    import { stayLoggedIn, loginInfo, loginMessage, userInfo } from '../stores'
     import { httpPost } from '../util/httpRequest'
 
     let username
     let password
     let canLogin = true
-    let isLoginErrorShown = false
+    let isLoginNotificationShown = false
     let isSecurityModalOpen = false
     let isLoginKeyOpen = false
-
-    const loginErrorInfo = {
+    let loginNotification = {
         title: undefined,
         subtitle: undefined,
         kind: undefined
     }
 
     const login = async () => {
-        isLoginErrorShown = false
+        isLoginNotificationShown = false
         canLogin = false
 
         const req = await httpPost('/getUnDeveloppeur.php', {
@@ -39,10 +40,10 @@
         }, false)
 
         if (!req.returnedJson) {
-            loginErrorInfo.title = 'Connexion échouée'
-            loginErrorInfo.subtitle = 'Veuillez revérifier vos informations de connexion et réessayez.'
-            loginErrorInfo.kind = 'error'
-            isLoginErrorShown = true
+            loginNotification.title = 'Connexion échouée'
+            loginNotification.subtitle = 'Veuillez revérifier vos informations de connexion et réessayez.'
+            loginNotification.kind = 'error'
+            isLoginNotificationShown = true
 
             canLogin = true
             password = ''
@@ -68,6 +69,17 @@
 
         push('/journal')
     }
+
+    onMount(() => {
+        const message = get(loginMessage)
+
+        if (message?.kind) {
+            loginNotification = message
+            isLoginNotificationShown = true
+        }
+
+        loginMessage.set({})
+    })
 </script>
 
 <div class="outer">
@@ -76,15 +88,15 @@
             <h1 class="login-header">Meilleur Jourvie</h1>
             <p class="login-header">Connectez-vous avec votre compte Jourvie actuel</p>
 
-            {#if isLoginErrorShown}
+            {#if isLoginNotificationShown}
                 <InlineNotification
                     lowContrast
-                    kind={loginErrorInfo.kind}
-                    title={loginErrorInfo.title}
-                    subtitle={loginErrorInfo.subtitle}
+                    kind={loginNotification.kind}
+                    title={loginNotification.title}
+                    subtitle={loginNotification.subtitle}
                     on:close={e => {
                         e.preventDefault()
-                        isLoginErrorShown = false
+                        isLoginNotificationShown = false
                     }}
                 />
             {/if}

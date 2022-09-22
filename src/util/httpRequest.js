@@ -35,8 +35,8 @@ const hasValidSession = async () => {
     if (typeof req.data !== 'object') {
         loginMessage.set({
             kind: 'warning',
-            title: 'Session invalide',
-            message: 'Votre session a été invalidée. Veuillez vous reconnecter.'
+            title: 'État de connexion invalide',
+            subtitle: 'Votre état de connexion a été invalidée. Veuillez vous reconnecter.'
         })
         loginInfo.set({})
         userInfo.set({})
