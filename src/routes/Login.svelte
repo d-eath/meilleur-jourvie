@@ -12,12 +12,9 @@
 
     import LoginKeyPost from '../components/LoginKeyPost.svelte'
 
-    import axios from 'axios'
     import { push } from 'svelte-spa-router'
-    import { stringify } from 'query-string'
     import { stayLoggedIn, loginInfo, userInfo } from '../stores'
-
-    const { VITE_API_URL } = import.meta.env
+    import { httpPost } from '../util/httpRequest'
 
     let username
     let password
@@ -36,24 +33,17 @@
         isLoginErrorShown = false
         canLogin = false
 
-        const req = await axios.post(`${VITE_API_URL}/getUnDeveloppeur.php`, stringify({
+        const req = await httpPost('/getUnDeveloppeur.php', {
             matricule: username,
             motPasse: password
-        }), {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-            },
-        })
+        }, false)
 
-        // if the api returns a string (even though it should return a json object,
-        // because content-type is application/json), then it means the login failed
-        // what the fuck martel?
-        if (typeof req.data !== 'object') {
+        if (!req.returnedJson) {
             loginErrorInfo.title = 'Connexion échouée'
             loginErrorInfo.subtitle = 'Veuillez revérifier vos informations de connexion et réessayez.'
             loginErrorInfo.kind = 'error'
-
             isLoginErrorShown = true
+
             canLogin = true
             password = ''
 

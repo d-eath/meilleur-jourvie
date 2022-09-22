@@ -12,7 +12,7 @@
     import { stringify } from 'query-string'
     import { loginInfo, userInfo } from '../stores'
 
-    const { VITE_API_URL } = import.meta.env
+    import { httpGet, httpPost } from '../util/httpRequest'
 
     let _currentSession = null
     let _pastSessions = []
@@ -25,9 +25,13 @@
         _currentSession = null
         _pastSessions = []
 
-        await getSessions()
-        await getComments()
-        await getFiles()
+        if (!await getSessions()) {
+            return
+        }
+
+        if (!await getComments() || !await getFiles()) {
+            return
+        }
 
         // @ts-ignore
         _currentSession?.comments.sort((a, b) => b.timestamp - a.timestamp)
@@ -43,7 +47,11 @@
     }
 
     const getSessions = async () => {
-        const req = await axios.get(`${VITE_API_URL}/getSessionsTravail.php?devId=${get(userInfo).id}`)
+        const req = await httpGet(`/getSessionsTravail.php?devId=${get(userInfo).id}`)
+
+        if (req.sessionError) {
+            return false
+        }
 
         for (const session of req.data) {
             const newSession = {
@@ -60,21 +68,23 @@
             if (newSession.timestampEnd === null) {
                 _currentSession = newSession
 
-                continue;
+                continue
             }
 
             _pastSessions = [..._pastSessions, newSession]
         }
+
+        return true
     }
 
     const getComments = async () => {
-        const req = await axios.post(`${VITE_API_URL}/getCommentaires.php?devId=${get(userInfo).id}`, stringify({
+        const req = await httpPost(`/getCommentaires.php?devId=${get(userInfo).id}`, {
             acces: get(loginInfo).token
-        }), {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-            },
         })
+
+        if (req.sessionError) {
+            return false
+        }
 
         for (const comment of req.data) {
             const sessionId = parseInt(comment.Session_Id)
@@ -88,23 +98,25 @@
             if (sessionId === _currentSession?.id) {
                 _currentSession.comments = [..._currentSession.comments, newComment]
 
-                continue;
+                continue
             }
 
             const session = _pastSessions.find(s => s.id === sessionId)
 
             session.comments = [...session.comments, newComment]
         }
+
+        return true
     }
 
     const getFiles = async () => {
-        const req = await axios.post(`${VITE_API_URL}/getTeleversements.php?devId=${get(userInfo).id}`, stringify({
+        const req = await httpPost(`/getTeleversements.php?devId=${get(userInfo).id}`, {
             acces: get(loginInfo).token
-        }), {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-            },
         })
+
+        if (req.sessionError) {
+            return false
+        }
 
         for (const file of req.data) {
             const newFile = {
@@ -118,13 +130,15 @@
             if (newFile.timestamp >= _currentSession?.timestampStart) {
                 _currentSession.comments = [..._currentSession.comments, newFile]
 
-                continue;
+                continue
             }
 
             const session = _pastSessions.find(s => s.timestampStart <= newFile.timestamp && s.timestampEnd >= newFile.timestamp)
 
             session.comments = [...session.comments, newFile]
         }
+
+        return true
     }
 
     onMount(updateJournal)
