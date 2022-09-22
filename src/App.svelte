@@ -2,7 +2,7 @@
     import { onMount } from 'svelte'
     import { loadUserInfo } from './util/userInfoLoader'
 
-    import './util/sessionChecker'
+    import './util/httpRequest'
 
     let ready = false
 

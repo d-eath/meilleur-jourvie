@@ -6,6 +6,7 @@ import { loginInfo, loginMessage, userInfo } from '../stores'
 
 const { VITE_API_URL } = import.meta.env
 const CHECK_INTERVAL = 5000
+const PASSIVE_CHECK_INTERVAL = 60000
 
 let lastCheck = 0
 
@@ -92,3 +93,13 @@ export const httpPostFormData = async (url, body = {}, checkSession = true) => {
 
     return { data, sessionError: false, returnedJson: typeof data === 'object' }
 }
+
+setInterval(() => {
+    if (Date.now() <= lastCheck + PASSIVE_CHECK_INTERVAL) {
+        return
+    }
+
+    if (get(loginInfo)?.token) {
+        hasValidSession()
+    }
+}, 1000)
