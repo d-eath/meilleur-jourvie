@@ -20,7 +20,7 @@
         }
     })
 
-    const stopSession = async () => {
+    const endSession = async () => {
         await httpPost(`/putSessionTravail.php?sessionTravailId=${get(currentSession).session.id}`, {
             devId: get(loginInfo).id,
             acces: get(loginInfo).token
@@ -61,11 +61,11 @@
         <Tooltip direction="top" align="end">
             <Button size="xl" slot="icon" kind="secondary" icon={TaskAssetViewIcon} tooltipPosition="left" />
             <h4>Session en cours</h4>
-            <h5>Tâche <Tag type="blue" size="sm">{$currentSession.task.number}</Tag></h5>
+            <h5>Tâche <Tag type="purple" size="sm">{$currentSession.task.number}</Tag></h5>
             <p>{$currentSession.task.title}</p>
             <h5>Temps écoulé</h5>
             <p class="last-item">{timeElapsed}</p>
-            <Button size="small" kind="danger" icon={StopIcon} on:click={stopSession}>Arrêter la session</Button>
+            <Button size="small" kind="danger" icon={StopIcon} on:click={endSession}>Terminer la session</Button>
         </Tooltip>
     </div>
 {/if}

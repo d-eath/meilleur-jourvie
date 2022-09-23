@@ -11,7 +11,6 @@
 
     import ChatIcon from 'carbon-icons-svelte/lib/Chat.svelte'
     import AttachmentIcon from 'carbon-icons-svelte/lib/Attachment.svelte'
-    import StopIcon from 'carbon-icons-svelte/lib/Stop.svelte'
 
     import FileUpload from '../components/FileUpload.svelte'
     import JournalComments from '../components/JournalComments.svelte'
@@ -67,15 +66,6 @@
         }
     }
 
-    const stopSession = async () => {
-        await httpPost(`/putSessionTravail.php?sessionTravailId=${session.id}`, {
-            devId: get(loginInfo).id,
-            acces: get(loginInfo).token
-        })
-
-        dispatch('updatejournal')
-    }
-
     const postComment = async () => {
         if (commentContent.length === 0) {
             return
@@ -117,7 +107,7 @@
         </Row>
         <Row>
             <Column>
-                <Tag type="blue" size="sm">{session.task.number}</Tag>
+                <Tag type="purple" size="sm">{session.task.number}</Tag>
             </Column>
             <Column>
                 <span class="session-data">

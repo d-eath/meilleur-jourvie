@@ -63,7 +63,7 @@
     </Row>
     <Row>
         <Column>
-            <Tag type="blue" size="sm">{session.task.number}</Tag>
+            <Tag type="purple" size="sm">{session.task.number}</Tag>
         </Column>
         <Column>
             <span>
