@@ -10,15 +10,23 @@
     import { get } from 'svelte/store'
     import { currentSession as storeCurrentSession, loginInfo, userInfo } from '../stores'
     import { httpGet, httpPost } from '../util/httpRequest'
+    import { subscribeIgnoreFirst } from '../util/subscribeIgnoreFirst'
 
     let _currentSession = null
     let _pastSessions = []
     let currentSession = null
     let pastSessions = []
     let isLoaded = false
+    let isUpdating = false
     const expandedSessions = {}
 
     const updateJournal = async () => {
+        if (isUpdating) {
+            return
+        }
+
+        isUpdating = true
+
         _currentSession = null
         _pastSessions = []
 
@@ -41,6 +49,7 @@
         pastSessions = _pastSessions
 
         isLoaded = true
+        isUpdating = false
     }
 
     const getSessions = async () => {
@@ -138,7 +147,7 @@
         return true
     }
 
-    storeCurrentSession.subscribe(updateJournal)
+    subscribeIgnoreFirst(storeCurrentSession, updateJournal)
     onMount(updateJournal)
 </script>
 
