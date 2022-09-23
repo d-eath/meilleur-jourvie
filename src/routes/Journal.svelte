@@ -8,7 +8,7 @@
 
     import { onMount } from 'svelte'
     import { get } from 'svelte/store'
-    import { loginInfo, userInfo } from '../stores'
+    import { currentSession as storeCurrentSession, loginInfo, userInfo } from '../stores'
     import { httpGet, httpPost } from '../util/httpRequest'
 
     let _currentSession = null
@@ -138,6 +138,7 @@
         return true
     }
 
+    storeCurrentSession.subscribe(updateJournal)
     onMount(updateJournal)
 </script>
 
@@ -157,10 +158,10 @@
                     lowContrast
                     hideCloseButton
                     kind="info"
-                    title="Vous n'avez pas de session active."
+                    title="Vous n'avez pas de session en cours."
                 >
                     <svelte:fragment slot="subtitle">
-                        Consultez vos <a href="#/tasks">tâches</a> pour démarrer une session.
+                        Consultez vos <a href="#/tasks">tâches</a> pour en démarrer une.
                     </svelte:fragment>
                 </InlineNotification>
             </div>

@@ -6,6 +6,9 @@ export const loginMessage = writable()
 // Store: userInfo
 export const userInfo = writable()
 
+// Store: currentSession
+export const currentSession = writable()
+
 // Store: stayLoggedIn
 export const stayLoggedIn = writable(localStorage.getItem('meilleurJourvie.stayLoggedIn') === 'true' || false)
 

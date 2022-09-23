@@ -25,6 +25,7 @@
     import { get } from 'svelte/store'
     import { location, push } from 'svelte-spa-router'
     import { stayLoggedIn, loginInfo, userInfo } from '../stores'
+    import { setCurrentSession } from '../util/currentSessionSetter'
     import { httpGet } from '../util/httpRequest'
 
     let projectName
@@ -54,6 +55,7 @@
         // avoid guard redirect by deleting loginToken
         loginInfo.set({})
         stayLoggedIn.set(false)
+        setCurrentSession(null)
 
         // avoid "undefined" world with a delay
         setTimeout(() => { userInfo.set({}) }, 1000)

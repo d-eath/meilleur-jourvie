@@ -2,6 +2,7 @@ import { replace } from 'svelte-spa-router'
 import { loginInfo, userInfo } from '../stores'
 import { get } from 'svelte/store'
 import { httpGet, httpPost } from './httpRequest'
+import { setCurrentSession } from './currentSessionSetter'
 
 export const loadUserInfo = async (username, noRedirect = false) => {
     const id = get(loginInfo)?.id
@@ -41,6 +42,8 @@ export const loadUserInfo = async (username, noRedirect = false) => {
             projectId: parseInt(user.ProjetAssigne_Id),
             sessionId: currentSession?.Id || null
         })
+
+        setCurrentSession(currentSession?.Id || null)
 
         return true
     }

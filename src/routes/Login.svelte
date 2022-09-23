@@ -17,6 +17,7 @@
     import { push } from 'svelte-spa-router'
     import { stayLoggedIn, loginInfo, loginMessage, userInfo } from '../stores'
     import { httpPost } from '../util/httpRequest'
+    import { setCurrentSession } from '../util/currentSessionSetter'
 
     let username
     let password
@@ -66,6 +67,8 @@
             projectId: parseInt(req.data.ProjetAssigne_Id),
             sessionId: req.data.SessionId !== 0 ? parseInt(req.data.SessionId) : null
         })
+
+        setCurrentSession(req.data.SessionId !== 0 ? parseInt(req.data.SessionId) : null)
 
         push('/journal')
     }

@@ -99,10 +99,6 @@
     export let session
 </script>
 
-<div class="session-stop">
-    <Button kind="danger" icon={StopIcon} on:click={stopSession}>Arrêter la session</Button>
-</div>
-
 <Tile light>
     <Grid narrow>
         <Row>
@@ -195,10 +191,6 @@
 
     .session-actions {
         margin-top: 24px;
-    }
-
-    .session-stop {
-        margin-bottom: 24px;
     }
 
     .session-data {
