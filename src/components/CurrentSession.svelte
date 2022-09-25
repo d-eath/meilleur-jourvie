@@ -134,7 +134,17 @@
                 <Tile light>
                     <div class="session-actions">
                         <div class="comment-box">
-                            <TextArea maxCount={750} placeholder="Écrivez votre commentaire..." disabled={!canComment} bind:value={commentContent} />
+                            <TextArea
+                                maxCount={750}
+                                placeholder="Écrivez votre commentaire..."
+                                disabled={!canComment}
+                                bind:value={commentContent}
+                                on:keydown={e => {
+                                    if (e.key === 'Enter' && e.ctrlKey) {
+                                        postComment()
+                                    }
+                                }}
+                            />
                         </div>
                         <div class="comment-buttons">
                             <Button disabled={commentContent.length === 0 || !canComment} icon={ChatIcon} on:click={postComment}>Commenter</Button>
