@@ -126,8 +126,8 @@
         <DataTable
             {headers}
             rows={tasks}
-            title="Tâches de l'équipe"
-            description={!get(userInfo).isCoordinator ? `Seuls les coordinateurs peuvent créer ou modifier les tâches de l'équipe.` : ''}
+            title="Tâches du projet"
+            description={!get(userInfo).isCoordinator ? `Seuls les coordinateurs peuvent créer ou modifier les tâches du projet.` : ''}
         >
             {#if get(userInfo).isCoordinator}
                 <Toolbar>
@@ -201,7 +201,7 @@
 
 <style>
     h1 {
-        margin-bottom: 1rem;
+        margin-bottom: 32px;
     }
 
     .start-button :global(.bx--btn) {

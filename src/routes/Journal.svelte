@@ -39,9 +39,7 @@
             return
         }
 
-        if (!await getComments() || !await getFiles()) {
-            return
-        }
+        await Promise.all([getComments(), getFiles()])
 
         // @ts-ignore
         _currentSession?.comments.sort((a, b) => b.timestamp - a.timestamp)
