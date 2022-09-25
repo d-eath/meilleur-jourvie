@@ -87,7 +87,7 @@
                                 {$userInfo?.firstName} {$userInfo?.lastName}
                             </div>
                             <div class="profile-summary-role">
-                                {$userInfo?.isCoordinator ? 'Coordinateur' : 'Développeur'}
+                                {$userInfo?.isCoordinator ? 'Coordonnateur' : 'Développeur'}
                             </div>
                         </div>
                     </li>
