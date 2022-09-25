@@ -1,5 +1,8 @@
 <script>
-    import { Accordion, AccordionItem, InlineNotification, Loading } from 'carbon-components-svelte'
+    import { Accordion, AccordionItem, Button, InlineNotification, Loading } from 'carbon-components-svelte'
+
+    import CollapseAllIcon from 'carbon-icons-svelte/lib/CollapseAll.svelte'
+    import ExpandAllIcon from 'carbon-icons-svelte/lib/ExpandAll.svelte'
 
     import Base from '../components/Base.svelte'
     import CurrentSession from '../components/CurrentSession.svelte'
@@ -19,6 +22,8 @@
     let isLoaded = false
     let isUpdating = false
     const expandedSessions = {}
+
+    $: allEntriesExpanded = !Object.values(expandedSessions).includes(false)
 
     const updateJournal = async () => {
         if (isUpdating) {
@@ -47,6 +52,12 @@
 
         currentSession = _currentSession
         pastSessions = _pastSessions
+
+        for (const session of pastSessions) {
+            if (!expandedSessions[session.id]) {
+                expandedSessions[session.id] = false
+            }
+        }
 
         isLoaded = true
         isUpdating = false
@@ -147,6 +158,14 @@
         return true
     }
 
+    const toggleExpandCollapse = () => {
+        const expand = !allEntriesExpanded
+
+        for (const session in expandedSessions) {
+            expandedSessions[session] = expand
+        }
+    }
+
     subscribeIgnoreFirst(storeCurrentSession, updateJournal)
     onMount(updateJournal)
 </script>
@@ -178,6 +197,13 @@
 
         {#if pastSessions.length > 0}
             <h2>Sessions précédentes</h2>
+            <div class="expand-collapse-button">
+                {#if allEntriesExpanded}
+                    <Button kind="ghost" icon={CollapseAllIcon} on:click={toggleExpandCollapse}>Réduire tout</Button>
+                {:else}
+                    <Button kind="ghost" icon={ExpandAllIcon} on:click={toggleExpandCollapse}>Développer tout</Button>
+                {/if} 
+            </div> 
             <Accordion align="start">
                 {#each pastSessions as session}
                     <AccordionItem iconDescription="" bind:open={expandedSessions[session.id]}>
@@ -204,6 +230,10 @@
 
     .no-active-session-info :global(.bx--inline-notification) {
         max-width: 100%;
+    }
+
+    .expand-collapse-button {
+        margin-bottom: 1rem;
     }
 
     .current-session {
