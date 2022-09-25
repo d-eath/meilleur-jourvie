@@ -16,7 +16,6 @@
     import TaskIcon from 'carbon-icons-svelte/lib/Task.svelte'
     import ChartColumnIcon from 'carbon-icons-svelte/lib/ChartColumn.svelte'
     import UserAvatarFilledAltIcon from 'carbon-icons-svelte/lib/UserAvatarFilledAlt.svelte'
-    import VolumeFileStorageIcon from 'carbon-icons-svelte/lib/VolumeFileStorage.svelte'
 
     import LoginKeyGet from './LoginKeyGet.svelte'
     import CurrentSessionFloating from './CurrentSessionFloating.svelte'
@@ -103,7 +102,6 @@
     <SideNav bind:isOpen={isSideNavOpen} rail>
         <SideNavItems>
             <SideNavLink icon={CatalogIcon} href="#/journal" isSelected={$location === '/journal'} text="Journal" />
-            <SideNavLink icon={VolumeFileStorageIcon} href="#/files" isSelected={$location === '/files'} text="Fichiers" />
             <SideNavLink icon={TaskIcon} href="#/tasks" isSelected={$location === '/tasks'} text="Tâches" />
             <SideNavLink icon={ChartColumnIcon} href="#/stats" isSelected={$location === '/stats'} text="Statistiques" />
         </SideNavItems>

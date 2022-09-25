@@ -27,7 +27,7 @@ export const setCurrentSession = async (sessionId) => {
         },
         task: {
             id: taskId,
-            number: taskReq.data.Numero,
+            number: sessionReq.data.TacheNumero,
             title: taskReq.data.Titre
         }
     })
