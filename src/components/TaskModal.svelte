@@ -63,6 +63,7 @@
     modalHeading={taskData.id ? 'Modifier la tâche' : 'Créer une nouvelle tâche'}
     primaryButtonText={taskData.id ? 'Modifier' : 'Créer'}
     secondaryButtonText="Annuler"
+    primaryButtonDisabled={!taskData.title || !taskData.number || !taskData.description}
     on:click:button--primary={submit}
     on:click:button--secondary={() => open = false}
 >
@@ -70,19 +71,25 @@
         <Row>
             <Column sm={1} noGutterRight>
                 <div class="form-margin">
-                    <TextInput bind:value={taskData.number} labelText="Numéro" maxlength={12} />
+                    <TextInput bind:value={taskData.number} labelText="Numéro" maxlength={12} placeholder="T-0" />
                 </div>
             </Column>
             <Column sm={3} noGutterLeft>
                 <div class="form-margin margin-left">
-                    <TextInput bind:value={taskData.title} labelText="Titre" maxlength={35} />
+                    <TextInput bind:value={taskData.title} labelText="Titre" maxlength={35} placeholder="Écrire le titre d'une tâche" />
                 </div>
             </Column>
         </Row>
         <Row>
             <Column sm={4}>
                 <div class="form-margin">
-                    <TextArea bind:value={taskData.description} labelText="Description" rows={5} maxlength={300} />
+                    <TextArea
+                        bind:value={taskData.description}
+                        labelText="Description"
+                        rows={5}
+                        maxlength={300}
+                        placeholder="Écrire la description d'un tâche à effectuer pour le projet dans l'application Jourvie."
+                    />
                 </div>
             </Column>
         </Row>

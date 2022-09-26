@@ -127,7 +127,7 @@
             {headers}
             rows={tasks}
             title="Tâches du projet"
-            description={!get(userInfo).isCoordinator ? `Seuls les coordinateurs peuvent créer ou modifier les tâches du projet.` : ''}
+            description={!get(userInfo).isCoordinator ? `Seuls les coordonnateurs peuvent créer ou modifier les tâches du projet.` : ''}
         >
             {#if get(userInfo).isCoordinator}
                 <Toolbar>
