@@ -81,7 +81,7 @@
             .map(s => {
                 return {
                     start: new Date(s.Debut).valueOf(),
-                    end: new Date(s.Fin).valueOf(),
+                    end: s.Fin ? new Date(s.Fin).valueOf() : Math.floor(new Date().valueOf() / 1000) * 1000,
                 }
             })
             .filter(s => s.start >= personalStatsStartDate && s.start <= personalStatsEndDate || !personalStatsRange)
