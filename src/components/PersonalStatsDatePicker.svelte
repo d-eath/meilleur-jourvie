@@ -9,7 +9,18 @@
 
     const dispatch = createEventDispatcher()
 
-    let valueFrom = dayjs().day(1).format('YYYY-MM-DD')
+    const getLatestDateFromDay = (day) => {
+        const today = dayjs()
+        const defaultDay = dayjs().day(day)
+
+        if (defaultDay > today) {
+            return dayjs().day(day - 7).format('YYYY-MM-DD')
+        }
+
+        return defaultDay.format('YYYY-MM-DD')
+    }
+
+    let valueFrom = getLatestDateFromDay(4)
     let valueTo = dayjs().format('YYYY-MM-DD')
 
     export let range = false
