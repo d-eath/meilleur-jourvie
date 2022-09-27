@@ -1,3 +1,4 @@
+import dayjs from 'dayjs'
 import { get } from 'svelte/store'
 import { currentSession, userInfo } from '../stores'
 import { httpGet } from './httpRequest'
@@ -23,7 +24,7 @@ export const setCurrentSession = async (sessionId) => {
     currentSession.set({
         session: {
             id: parseInt(sessionReq.data.Id),
-            timestampStart: new Date(sessionReq.data.Debut).valueOf()
+            timestampStart: dayjs(sessionReq.data.Debut).unix()
         },
         task: {
             id: taskId,

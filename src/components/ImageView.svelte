@@ -5,11 +5,10 @@
     export let alt = ''
 
     const dispatch = createEventDispatcher()
-    const close = () => dispatch('close')
 </script>
 
 <div class="overlay">
-    <div class="outer" on:click|self="{close}">
+    <div class="outer" on:click|self={() => dispatch('close')}>
         <img src="{src}" alt="{alt}">
         <a href="{src}" target="_blank">Ouvrir la source</a>
     </div>

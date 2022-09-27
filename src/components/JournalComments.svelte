@@ -28,7 +28,7 @@
                 {/if}
             </div>
             <div class="timestamp">
-                {dayjs(comment.timestamp).locale('fr').format('dddd D MMMM YYYY à HH:mm')}
+                {dayjs.unix(comment.timestamp).locale('fr').format('dddd D MMMM YYYY à HH:mm')}
                 <span class="legacy-icon">
                     {#if comment.type === 'comment' && isLegacyComment(comment.content)}
                         <TooltipIcon

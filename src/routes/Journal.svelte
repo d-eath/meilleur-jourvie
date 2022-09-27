@@ -9,6 +9,7 @@
     import JournalComments from '../components/JournalComments.svelte'
     import PastSessionSummary from '../components/PastSessionSummary.svelte'
 
+    import dayjs from 'dayjs'
     import { onMount } from 'svelte'
     import { get } from 'svelte/store'
     import { currentSession as storeCurrentSession, loginInfo, userInfo } from '../stores'
@@ -71,8 +72,8 @@
         for (const session of req.data) {
             const newSession = {
                 id: parseInt(session.Id),
-                timestampStart: new Date(session.Debut).valueOf(),
-                timestampEnd: session.Fin ? new Date(session.Fin).valueOf() : null,
+                timestampStart: dayjs(session.Debut).unix(),
+                timestampEnd: session.Fin ? dayjs(session.Fin).unix() : null,
                 task: {
                     id: parseInt(session.TacheId),
                     number: session.TacheNumero
@@ -106,7 +107,7 @@
             const newComment = {
                 type: 'comment',
                 id: parseInt(comment.Id),
-                timestamp: new Date(comment.Horodateur).valueOf(),
+                timestamp: dayjs(comment.Horodateur).unix(),
                 content: comment.Contenu
             }
 
@@ -137,7 +138,7 @@
             const newFile = {
                 type: 'file',
                 id: parseInt(file.Id),
-                timestamp: new Date(file.DateTele).valueOf(),
+                timestamp: dayjs(file.DateTele).unix(),
                 filename: file.NomFichier,
                 mimeType: file.Extension
             }

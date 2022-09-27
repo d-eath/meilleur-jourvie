@@ -5,13 +5,15 @@
     import TaskAssetViewIcon from 'carbon-icons-svelte/lib/TaskAssetView.svelte'
 
     import dayjs from 'dayjs'
+    import { onMount } from 'svelte'
     import { get } from 'svelte/store'
     import { currentSession, loginInfo } from '../stores'
     import { setCurrentSession } from '../util/currentSessionSetter'
+    import { calculateSecondsDuration } from '../util/durationCalculator'
     import { httpPost } from '../util/httpRequest'
 
-    let timestampStart = -1
-    let secondsElapsed = 0
+    let timestampStart
+    let secondsElapsed
     let timeElapsed
 
     currentSession.subscribe(session => {
@@ -19,6 +21,11 @@
             timestampStart = session.session.timestampStart
         }
     })
+
+    const updateLiveStats = () => {
+        secondsElapsed = dayjs().diff(dayjs.unix(timestampStart), 'second')
+        timeElapsed = calculateSecondsDuration(secondsElapsed)
+    }
 
     const endSession = async () => {
         await httpPost(`/putSessionTravail.php?sessionTravailId=${get(currentSession).session.id}`, {
@@ -29,31 +36,8 @@
         setCurrentSession(null)
     }
 
-    setInterval(() => {
-        if (timestampStart > -1) {
-            secondsElapsed = dayjs().diff(dayjs(timestampStart), 'second')
-        }
-    }, 500)
-
-    $: {
-        const hours = Math.floor(secondsElapsed / 3600)
-        const minutes = Math.floor(secondsElapsed % 3600 / 60)
-        const seconds = secondsElapsed % 60
-
-        let result = ''
-
-        if (hours > 0) {
-            result += hours + 'h '
-        }
-
-        if (minutes > 0) {
-            result += minutes + 'm '
-        }
-
-        result += seconds + 's'
-
-        timeElapsed = result
-    }
+    setInterval(updateLiveStats, 500)
+    onMount(updateLiveStats)
 </script>
 
 {#if $currentSession}

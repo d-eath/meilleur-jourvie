@@ -10,31 +10,13 @@
     import ChatIcon from 'carbon-icons-svelte/lib/Chat.svelte'
     import AttachmentIcon from 'carbon-icons-svelte/lib/Attachment.svelte'
 
-    const calculateDuration = (fullSeconds) => {
-        const hours = Math.floor(fullSeconds / 3600)
-        const minutes = Math.floor(fullSeconds % 3600 / 60)
-        const seconds = fullSeconds % 60
-
-        let result = ''
-
-        if (hours > 0) {
-            result += hours + 'h '
-        }
-
-        if (minutes > 0) {
-            result += minutes + 'm '
-        }
-
-        result += seconds + 's'
-        
-        return result
-    }
+    import { calculateSecondsDuration } from '../util/durationCalculator'
 
     const sumSeconds = () => {
         let seconds = 0
 
         sessions.forEach(s => {
-            seconds += (s.end - s.start) / 1000
+            seconds += s.end - s.start
         })
 
         return seconds
@@ -44,7 +26,7 @@
         let netSeconds = 0
 
         sessions.forEach(s => {
-            const seconds = (s.end - s.start) / 1000
+            const seconds = s.end - s.start
             const sessionComments = comments.filter(c => c >= s.start && c <= s.end).length
             
             netSeconds += seconds * calculateCoefficiency(seconds, sessionComments)
@@ -61,14 +43,15 @@
 
     let totalDuration
     let netDuration
+
     $: sessionsCount = sessions.length
     $: commentsCount = comments.length
     $: uploadsCount = uploads.length
 
     $: {
         sessionsCount || commentsCount || uploadsCount
-        totalDuration = calculateDuration(sumSeconds())
-        netDuration = calculateDuration(sumNetSeconds())
+        totalDuration = calculateSecondsDuration(sumSeconds())
+        netDuration = calculateSecondsDuration(sumNetSeconds())
     }
 
     export let sessions

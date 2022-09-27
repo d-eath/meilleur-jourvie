@@ -9,9 +9,11 @@
     import PersonalStats from '../components/PersonalStats.svelte'
     import PersonalStatsDatePicker from '../components/PersonalStatsDatePicker.svelte'
 
+    import dayjs from 'dayjs'
     import { onMount } from 'svelte'
     import { get } from 'svelte/store'
     import { loginInfo, userInfo } from '../stores'
+    import { calculateSecondsDuration } from '../util/durationCalculator'
     import { httpGet, httpPost } from '../util/httpRequest'
 
     const devStatsHeaders = [
@@ -28,26 +30,6 @@
     let personalSessions
     let personalComments
     let personalUploads
-
-    const calculateDuration = (fullSeconds) => {
-        const hours = Math.floor(fullSeconds / 3600)
-        const minutes = Math.floor(fullSeconds % 3600 / 60)
-        const seconds = fullSeconds % 60
-
-        let result = ''
-
-        if (hours > 0) {
-            result += hours + 'h '
-        }
-
-        if (minutes > 0) {
-            result += minutes + 'm '
-        }
-
-        result += seconds + 's'
-        
-        return result
-    }
 
     const getDevStats = async () => {
         const req = await httpPost(`/getDevStats.php?projetId=${get(loginInfo).projectId}`, {
@@ -80,8 +62,8 @@
         personalSessions = req.data
             .map(s => {
                 return {
-                    start: new Date(s.Debut).valueOf(),
-                    end: s.Fin ? new Date(s.Fin).valueOf() : Math.floor(new Date().valueOf() / 1000) * 1000,
+                    start: dayjs(s.Debut).unix(),
+                    end: s.Fin ? dayjs(s.Fin).unix() : dayjs().unix(),
                 }
             })
             .filter(s => s.start >= personalStatsStartDate && s.start <= personalStatsEndDate || !personalStatsRange)
@@ -97,7 +79,7 @@
         }
 
         personalComments = req.data
-            .map(c => new Date(c.Horodateur).valueOf())
+            .map(c => dayjs(c.Horodateur).unix())
             .filter(c => c >= personalStatsStartDate && c <= personalStatsEndDate || !personalStatsRange)
     }
 
@@ -111,7 +93,7 @@
         }
 
         personalUploads = req.data
-            .map(u => new Date(u.DateTele).valueOf())
+            .map(u => dayjs(u.DateTele).unix())
             .filter(u => u >= personalStatsStartDate && u <= personalStatsEndDate || !personalStatsRange)
     }
 
@@ -172,7 +154,7 @@
                         </span>
                     {/if}
                 {:else if cell.key === 'hours'}
-                    {calculateDuration(cell.value)}
+                    {calculateSecondsDuration(cell.value)}
                 {:else if cell.key === 'comments'}
                     <span class="left icons"><ChatIcon /></span>
                     {cell.value}

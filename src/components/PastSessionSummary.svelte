@@ -6,40 +6,19 @@
 
     import 'dayjs/locale/fr'
     import dayjs from 'dayjs'
+    import { calculateTimestampsDuration } from '../util/durationCalculator'
 
     export let session
 
     const calculateCommentsPerHour = (session) => {
         const comments = session.comments.filter(c => c.type === 'comment').length 
-        const hours = dayjs(session.timestampEnd).diff(dayjs(session.timestampStart), 'hour', true)
+        const hours = dayjs.unix(session.timestampEnd).diff(dayjs.unix(session.timestampStart), 'hour', true)
 
         if (hours === 0) {
             return 0
         }
 
         return (comments / hours).toFixed(1).replace('.', ',')
-    }
-
-    const calculateDuration = (timestampStart, timestampEnd) => {
-        const fullSeconds = dayjs(timestampEnd).diff(dayjs(timestampStart), 'second')
-
-        const hours = Math.floor(fullSeconds / 3600)
-        const minutes = Math.floor(fullSeconds % 3600 / 60)
-        const seconds = fullSeconds % 60
-
-        let result = ''
-
-        if (hours > 0) {
-            result += hours + 'h '
-        }
-
-        if (minutes > 0) {
-            result += minutes + 'm '
-        }
-
-        result += seconds + 's'
-        
-        return result
     }
 </script>
 
@@ -67,18 +46,18 @@
         </Column>
         <Column>
             <span>
-                {dayjs(session.timestampStart).locale('fr').format('dddd D MMMM YYYY')}
+                {dayjs.unix(session.timestampStart).locale('fr').format('dddd D MMMM YYYY')}
             </span>
         </Column>
         <Column>
             <span>
-                {dayjs(session.timestampStart).locale('fr').format('HH:mm')} -
-                {dayjs(session.timestampEnd).locale('fr').format('HH:mm')}
+                {dayjs.unix(session.timestampStart).locale('fr').format('HH:mm')} -
+                {dayjs.unix(session.timestampEnd).locale('fr').format('HH:mm')}
             </span>
         </Column>
         <Column>
             <span>
-                {calculateDuration(session.timestampStart, session.timestampEnd)}
+                {calculateTimestampsDuration(session.timestampStart, session.timestampEnd)}
             </span>
         </Column>
         <Column>

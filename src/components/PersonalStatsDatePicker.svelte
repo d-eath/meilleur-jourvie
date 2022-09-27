@@ -5,20 +5,20 @@
     import { French } from 'flatpickr/dist/l10n/fr.js'
     import { createEventDispatcher, onMount } from 'svelte'
 
+    French.firstDayOfWeek = 0
+
     const dispatch = createEventDispatcher()
 
     let valueFrom = dayjs().subtract(2, 'week').format('YYYY-MM-DD')
     let valueTo = dayjs().format('YYYY-MM-DD')
 
     export let range = false
-    export let startDate = dayjs(valueFrom + ' 00:00:00').valueOf()
-    export let endDate = dayjs(valueTo + ' 23:59:59').valueOf()
-
-    French.firstDayOfWeek = 0
+    export let startDate = dayjs(valueFrom + ' 00:00:00').unix()
+    export let endDate = dayjs(valueTo + ' 23:59:59').unix()
 
     const updateDates = () => {
-        startDate = dayjs(valueFrom + ' 00:00:00').valueOf()
-        endDate = dayjs(valueTo + ' 23:59:59').valueOf()
+        startDate = dayjs(valueFrom + ' 00:00:00').unix()
+        endDate = dayjs(valueTo + ' 23:59:59').unix()
 
         dispatch('updatedates')
     }

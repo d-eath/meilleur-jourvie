@@ -17,9 +17,10 @@
 
     import 'dayjs/locale/fr'
     import dayjs from 'dayjs'
-    import { createEventDispatcher } from 'svelte'
+    import { createEventDispatcher, onMount } from 'svelte'
     import { get } from 'svelte/store'
     import { loginInfo } from '../stores'
+    import { calculateSecondsDuration } from '../util/durationCalculator'
     import { httpPost } from '../util/httpRequest'
 
     const dispatch = createEventDispatcher()
@@ -31,39 +32,21 @@
     let showFileUploadModal = false
     let canComment = true
 
-    setInterval(() => {
-        secondsElapsed = dayjs().diff(dayjs(session.timestampStart), 'second')
-    }, 500)
-
-    $: {
-        const hours = Math.floor(secondsElapsed / 3600)
-        const minutes = Math.floor(secondsElapsed % 3600 / 60)
-        const seconds = secondsElapsed % 60
-
-        let result = ''
-
-        if (hours > 0) {
-            result += hours + 'h '
-        }
-
-        if (minutes > 0) {
-            result += minutes + 'm '
-        }
-
-        result += seconds + 's'
-
-        timeElapsed = result
-    }
-
-    $: {
+    const calculateCommentsPerHour = (session) => {
         const comments = session.comments.filter(c => c.type === 'comment').length 
-        const hours = dayjs().diff(dayjs(session.timestampStart), 'hour', true)
+        const hours = dayjs().diff(dayjs.unix(session.timestampStart), 'hour', true)
 
         if (hours === 0) {
-            commentsPerHour = 0
-        } else {
-            commentsPerHour = (comments / hours).toFixed(1).replace('.', ',')
+            return 0
         }
+
+        return (comments / hours).toFixed(1).replace('.', ',')
+    }
+
+    const updateLiveStats = () => {
+        secondsElapsed = dayjs().diff(dayjs.unix(session.timestampStart), 'second')
+        timeElapsed = calculateSecondsDuration(secondsElapsed)
+        commentsPerHour = calculateCommentsPerHour(session)
     }
 
     const postComment = async () => {
@@ -83,8 +66,12 @@
         commentContent = ''
         canComment = true
 
+        updateLiveStats()
         dispatch('updatejournal')
     }
+
+    setInterval(updateLiveStats, 500)
+    onMount(updateLiveStats)
 
     export let session
 </script>
@@ -111,7 +98,7 @@
             </Column>
             <Column>
                 <span class="session-data">
-                    {dayjs(session.timestampStart).locale('fr').format('dddd D MMMM YYYY à HH:mm')}
+                    {dayjs.unix(session.timestampStart).locale('fr').format('dddd D MMMM YYYY à HH:mm')}
                 </span>
             </Column>
             <Column>
