@@ -10,13 +10,14 @@
     import ChatIcon from 'carbon-icons-svelte/lib/Chat.svelte'
     import AttachmentIcon from 'carbon-icons-svelte/lib/Attachment.svelte'
 
+    import dayjs from 'dayjs'
     import { calculateSecondsDuration } from '../util/durationCalculator'
 
     const sumSeconds = () => {
         let seconds = 0
 
         sessions.forEach(s => {
-            seconds += s.end - s.start
+            seconds += dayjs.unix(s.end).diff(dayjs.unix(s.start), 'second')
         })
 
         return seconds
@@ -26,13 +27,13 @@
         let netSeconds = 0
 
         sessions.forEach(s => {
-            const seconds = s.end - s.start
+            const seconds = dayjs.unix(s.end).diff(dayjs.unix(s.start), 'second')
             const sessionComments = comments.filter(c => c >= s.start && c <= s.end).length
             
             netSeconds += seconds * calculateCoefficiency(seconds, sessionComments)
         })
 
-        return netSeconds
+        return Math.round(netSeconds)
     }
 
     const calculateCoefficiency = (seconds, comments) => {

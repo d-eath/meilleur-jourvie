@@ -15,17 +15,13 @@ export const calculateSecondsDuration = (totalSeconds) => {
     const minutes = Math.floor(totalSeconds % 3600 / 60)
     const seconds = totalSeconds % 60
 
-    let result = ''
-    
     if (hours > 0) {
-        result += hours + 'h '
+        return `${hours}h ${minutes}m ${seconds}s`
     }
 
     if (minutes > 0) {
-        result += minutes + 'm '
+        return `${minutes}m ${seconds}s`
     }
 
-    result += seconds + 's'
-    
-    return result
+    return `${seconds}s`
 }
