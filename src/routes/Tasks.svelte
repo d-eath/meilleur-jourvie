@@ -11,6 +11,7 @@
 
     import { onMount } from 'svelte'
     import { get } from 'svelte/store'
+    import { push } from 'svelte-spa-router'
     import { currentSession, loginInfo, userInfo } from '../stores'
     import { setCurrentSession } from '../util/currentSessionSetter'
     import { httpGet, httpPost } from '../util/httpRequest'
@@ -94,6 +95,8 @@
         }
 
         setCurrentSession(parseInt(req.data))
+        push('/journal')
+
         setTimeout(() => {
             canStartSession = true
         }, 300)
