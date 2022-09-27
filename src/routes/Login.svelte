@@ -165,7 +165,7 @@
         align-items: center;
         justify-content: center;
 
-        background-image: url("login_background.jpg");
+        background-image: url("images/login_background.jpg");
         background-position: center;
         background-repeat: no-repeat;
         background-size: cover;
