@@ -9,7 +9,7 @@
 
     const dispatch = createEventDispatcher()
 
-    let valueFrom = dayjs().subtract(2, 'week').format('YYYY-MM-DD')
+    let valueFrom = dayjs().day(1).format('YYYY-MM-DD')
     let valueTo = dayjs().format('YYYY-MM-DD')
 
     export let range = false
