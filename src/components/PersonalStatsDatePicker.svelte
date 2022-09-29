@@ -27,14 +27,17 @@
     export let startDate = dayjs(valueFrom + ' 00:00:00').unix()
     export let endDate = dayjs(valueTo + ' 23:59:59').unix()
 
-    const updateDates = () => {
+    const setDates = () => {
         startDate = dayjs(valueFrom + ' 00:00:00').unix()
         endDate = dayjs(valueTo + ' 23:59:59').unix()
+    }
 
+    const updateDates = () => {
+        setDates()
         dispatch('updatedates')
     }
 
-    onMount(updateDates)
+    onMount(setDates)
 </script>
 
 <div>
