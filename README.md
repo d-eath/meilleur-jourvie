@@ -1,48 +1,59 @@
-# Svelte + Vite
+# Meilleur Jourvie
 
-This template should help get you started developing with Svelte in Vite.
+Un client Jourvie alternatif plus convivial pour les étudiants n'ayant pas le choix d'utiliser Jourvie dans le contexte du cours « Projet de développement » au CSTJ.
 
-## Recommended IDE Setup
+Créé par Davis Eath avec Svelte.
 
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
+## Utilisation
 
-## Need an official Svelte framework?
+### Instance publique (recommandé)
 
-Check out [SvelteKit](https://github.com/sveltejs/kit#readme), which is also powered by Vite. Deploy anywhere with its serverless-first approach and adapt to various platforms, with out of the box support for TypeScript, SCSS, and Less, and easily-added support for mdsvex, GraphQL, PostCSS, Tailwind CSS, and more.
+Accédez à l'instance publique de Meilleur Jourvie à l'adresse suivante: https://cstj.d-eath.ca/jourvie
 
-## Technical considerations
+#### Avis sur les risques de sécurité de l'instance publique
 
-**Why use this over SvelteKit?**
+L'instance publique de Meilleur Jourvie fait appel à un serveur « proxy » hébergé par le mainteneur de l'application pour contourner les restrictions CORS du serveur original en agissant comme intermédiaire. Cette procédure est nécessaire pour utiliser le serveur officiel de Jourvie.
 
-- It brings its own routing solution which might not be preferable for some users.
-- It is first and foremost a framework that just happens to use Vite under the hood, not a Vite app.
-  `vite dev` and `vite build` wouldn't work in a SvelteKit environment, for example.
+Toute donnée échangée entre l'application et le serveur original est transmise à ce serveur intermédiaire, incluant les mots de passe et les jetons de connexion. Le mainteneur s'engage à ne pas lire ou enregistrer les données échangées.
 
-This template contains as little as possible to get started with Vite + Svelte, while taking into account the developer experience with regards to HMR and intellisense. It demonstrates capabilities on par with the other `create-vite` templates and is a good starting point for beginners dipping their toes into a Vite + Svelte project.
+Toutefois, le mainteneur n'assume aucune responsabilité pour tout dommage causé par l'application ou le serveur « proxy ». Utilisez l'application à vos risques et périls.
 
-Should you later need the extended capabilities and extensibility provided by SvelteKit, the template has been structured similarly to SvelteKit so that it is easy to migrate.
+### Rouler votre propre instance
 
-**Why `global.d.ts` instead of `compilerOptions.types` inside `jsconfig.json` or `tsconfig.json`?**
+Vous aurez besoin des logiciels suivantes :
+* Git
+* Node.js 16.17.1 LTS
+* Un serveur API Jourvie
 
-Setting `compilerOptions.types` shuts out all other types not explicitly listed in the configuration. Using triple-slash references keeps the default TypeScript setting of accepting type information from the entire workspace, while also adding `svelte` and `vite/client` type information.
+Clonez ce répertoire Git et installez les dépendances nécessaires en effectuant les commandes suivantes:
 
-**Why include `.vscode/extensions.json`?**
-
-Other templates indirectly recommend extensions via the README, but this file allows VS Code to prompt the user to install the recommended extension upon opening the project.
-
-**Why enable `checkJs` in the JS template?**
-
-It is likely that most cases of changing variable types in runtime are likely to be accidental, rather than deliberate. This provides advanced typechecking out of the box. Should you like to take advantage of the dynamically-typed nature of JavaScript, it is trivial to change the configuration.
-
-**Why is HMR not preserving my local component state?**
-
-HMR state preservation comes with a number of gotchas! It has been disabled by default in both `svelte-hmr` and `@sveltejs/vite-plugin-svelte` due to its often surprising behavior. You can read the details [here](https://github.com/rixo/svelte-hmr#svelte-hmr).
-
-If you have state that's important to retain within a component, consider creating an external store which would not be replaced by HMR.
-
-```js
-// store.js
-// An extremely simple external store
-import { writable } from 'svelte/store'
-export default writable(0)
 ```
+git clone https://github.com/d-eath/meilleur-jourvie.git
+cd meilleur-jourvie
+npm i
+```
+
+Après avoir effectué ces commandes, renommez `.env.example` dans le répertoire à `.env`, et éditez le fichier pour configurer le client.
+
+Entrez les URLs de base pour l'API du serveur Jourvie et l'emplacement des téléversements, **sans inclure la barre oblique (`/`) à la fin**.
+
+Voici à ce que ressemble un fichier `.env` configuré:
+
+```
+VITE_API_URL=https://example.com:4200
+VITE_FILE_URL=https://example.com/fichiers
+```
+
+#### Rouler en mode développement
+
+Vous pouvez rouler l'application en mode développement en exécutant `npm run dev`.
+
+Par défaut, le mode développement écoute à l'adresse suivante: http://127.0.0.1:5173/
+
+#### Faire un build production
+
+Vous pouvez faire un build production de l'application en exécutant `npm run build`.
+
+Le build se retrouvera dans le dossier `dist` du répertoire.
+
+*Il y a présentement un bogue où les images de l'application se retrouvent dans le mauvais dossier dans un build. Pour le moment, veuillez déplacer le dossier `dist/images` au dossier `dist/assets` après avoir effectué un build pour remédier ce problème.*
