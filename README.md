@@ -12,11 +12,13 @@ Accédez à l'instance publique de Meilleur Jourvie à l'adresse suivante: https
 
 #### Avis sur les risques de sécurité de l'instance publique
 
-L'instance publique de Meilleur Jourvie fait appel à un serveur « proxy » hébergé par le mainteneur de l'application pour contourner les restrictions CORS du serveur original en agissant comme intermédiaire. Cette procédure est nécessaire pour utiliser le serveur officiel de Jourvie.
+L'instance publique de Meilleur Jourvie fait appel à un serveur « proxy » hébergé par le mainteneur de l'application pour contourner les [restrictions CORS](https://developer.mozilla.org/fr/docs/Web/HTTP/CORS) du serveur original en agissant comme intermédiaire. Cette procédure est nécessaire pour utiliser le serveur officiel de Jourvie.
 
-Toute donnée échangée entre l'application et le serveur original est transmise à ce serveur intermédiaire, incluant les mots de passe et les jetons de connexion. Le mainteneur s'engage à ne pas lire ou enregistrer les données échangées.
+Toute donnée échangée entre l'application publique et le serveur original est transmise à ce serveur intermédiaire, incluant les mots de passe et les jetons de connexion. Le mainteneur s'engage à ne pas lire ou enregistrer les données échangées.
 
 Toutefois, le mainteneur n'assume aucune responsabilité pour tout dommage causé par l'application ou le serveur « proxy ». Utilisez l'application à vos risques et périls.
+
+Le code source du proxy est disponible sur [d-eath/meilleur-jourvie-proxy](https://github.com/d-eath/meilleur-jourvie-proxy).
 
 ### Rouler votre propre instance
 
@@ -37,7 +39,7 @@ Après avoir effectué ces commandes, renommez `.env.example` dans le répertoir
 
 Entrez les URLs de base pour l'API du serveur Jourvie et l'emplacement des téléversements, **sans inclure la barre oblique (`/`) à la fin**.
 
-Voici à ce que ressemble un fichier `.env` configuré:
+Voici ce que ressemble un fichier `.env` configuré:
 
 ```
 VITE_API_URL=https://example.com:4200
