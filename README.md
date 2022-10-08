@@ -4,6 +4,19 @@ Un client Jourvie alternatif plus convivial pour les étudiants n'ayant pas le c
 
 Créé par Davis Eath avec Svelte.
 
+## Fonctionnalités
+
+Voici quelques fonctionnalités Meilleur Jourvie offre que Jourvie original n'a pas:
+
+* La possiblité de rester connecté. (Oubliez les mots de passe aléatoirement générés.)
+* Des « clés de connexion » pour rester connecté sur plusieurs appareils.
+* Une prévention de fermeture accidentelle d'onglet lorsqu'une session est ouverte.
+* Un calcul du temps « net » des sessions dans les statistiques. (Le même que celui dans le mode admin.)
+* Un filtre par intervalle de dates pour les statistiques.
+* Des chronomètres qui fonctionnent pour de vrai.
+* Des commentaires mieux formattés dans le journal.
+* Une interface graphique qui fait du sens.
+
 ## Utilisation
 
 ### Instance publique (recommandé)
