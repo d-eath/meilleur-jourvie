@@ -20,6 +20,17 @@
 
         return (comments / hours).toFixed(1).replace('.', ',')
     }
+
+    const calculateCoefficient = (session) => {
+        const seconds = dayjs.unix(session.timestampEnd).diff(dayjs.unix(session.timestampStart), 'second')
+        const comments = session.comments.filter(c => c.type === 'comment').length
+
+        let coefficient = comments / seconds / (5 / 9000)
+
+        coefficient = coefficient > 1 ? 1 : coefficient
+
+        return Math.round(coefficient * 100)
+    }
 </script>
 
 <Grid narrow>
@@ -58,13 +69,14 @@
         <Column>
             <span>
                 {calculateTimestampsDuration(session.timestampStart, session.timestampEnd)}
+                <span class="gray-stat">({calculateCoefficient(session)}%)</span>
             </span>
         </Column>
         <Column>
             <span>
                 <span class="comment-icons"><ChatIcon /></span>
                 {session.comments.filter(c => c.type === 'comment').length}
-                <span class="comment-ratio">({calculateCommentsPerHour(session)}/h)</span> •
+                <span class="gray-stat">({calculateCommentsPerHour(session)}/h)</span> •
                 <span class="comment-icons"><AttachmentIcon /></span>
                 {session.comments.filter(c => c.type === 'file').length}
             </span>
@@ -77,7 +89,7 @@
         vertical-align: middle;
     }
 
-    .comment-ratio {
+    .gray-stat {
         color: #666;
     }
     

@@ -103,7 +103,7 @@
         }
 
         for (const comment of req.data) {
-            const sessionId = parseInt(comment.Session_Id)
+            const sessionId = parseInt(comment.SessionId)
             const newComment = {
                 type: 'comment',
                 id: parseInt(comment.Id),

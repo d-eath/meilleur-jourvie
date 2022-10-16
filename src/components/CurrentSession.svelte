@@ -28,6 +28,7 @@
     let commentContent = ''
     let secondsElapsed = 0
     let timeElapsed
+    let timeCoefficient
     let commentsPerHour
     let showFileUploadModal = false
     let canComment = true
@@ -43,10 +44,22 @@
         return (comments / hours).toFixed(1).replace('.', ',')
     }
 
+    const calculateCoefficient = (session) => {
+        const seconds = dayjs().diff(dayjs.unix(session.timestampStart), 'second')
+        const comments = session.comments.filter(c => c.type === 'comment').length
+
+        let coefficient = comments / seconds / (5 / 9000)
+
+        coefficient = coefficient > 1 ? 1 : coefficient
+
+        return Math.round(coefficient * 100)
+    }
+
     const updateLiveStats = () => {
         secondsElapsed = dayjs().diff(dayjs.unix(session.timestampStart), 'second')
         timeElapsed = calculateSecondsDuration(secondsElapsed)
         commentsPerHour = calculateCommentsPerHour(session)
+        timeCoefficient = calculateCoefficient(session)
     }
 
     const postComment = async () => {
@@ -103,14 +116,14 @@
             </Column>
             <Column>
                 <span class="session-data">
-                    {timeElapsed}
+                    {timeElapsed} <span class="gray-data">({timeCoefficient}%)</span>
                 </span>
             </Column>
             <Column>
                 <span class="session-data">
                     <span class="comment-icons"><ChatIcon /></span>
                     {session.comments.filter(c => c.type === 'comment').length}
-                    <span class="comment-ratio">({commentsPerHour}/h)</span> •
+                    <span class="gray-data">({commentsPerHour}/h)</span> •
                     <span class="comment-icons"><AttachmentIcon /></span>
                     {session.comments.filter(c => c.type === 'file').length}
                 </span>
@@ -164,7 +177,7 @@
         vertical-align: middle;
     }
 
-    .comment-ratio {
+    .gray-data {
         color: #666;
     }
 
