@@ -13,7 +13,7 @@ export const calculateTimestampsDuration = (timestampStart, timestampEnd) => {
 export const calculateSecondsDuration = (totalSeconds) => {
     const hours = Math.floor(totalSeconds / 3600)
     const minutes = Math.floor(totalSeconds % 3600 / 60)
-    const seconds = totalSeconds % 60
+    const seconds = Math.round(totalSeconds % 60)
 
     if (hours > 0) {
         return `${hours}h ${minutes}m ${seconds}s`
