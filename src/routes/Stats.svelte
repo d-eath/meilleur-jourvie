@@ -18,7 +18,7 @@
 
     const devStatsHeaders = [
         { key: 'developer', value: 'Développeur' },
-        { key: 'hours', value: 'Temps cumulé' },
+        { key: 'time', value: 'Temps cumulé' },
         { key: 'comments', value: 'Commentaires' }
     ]
 
@@ -45,7 +45,7 @@
             return {
                 id: parseInt(s.Id),
                 developer: `${s.Prenom} ${s.Nom}`,
-                hours: s.CumTemps,
+                time: s.CumTemps,
                 comments: parseInt(s.CumCommentaires),
                 isCoordinator: s.EstCoordo === '1'
             }

@@ -30,16 +30,16 @@
             const seconds = dayjs.unix(s.end).diff(dayjs.unix(s.start), 'second')
             const sessionComments = comments.filter(c => c >= s.start && c <= s.end).length
             
-            netSeconds += seconds * calculateCoefficiency(seconds, sessionComments)
+            netSeconds += seconds * calculateCoefficient(seconds, sessionComments)
         })
 
         return Math.round(netSeconds)
     }
 
-    const calculateCoefficiency = (seconds, comments) => {
-        const coefficiency = comments / seconds / (5 / 9000)
+    const calculateCoefficient = (seconds, comments) => {
+        const coefficient = comments / seconds / (5 / 9000)
 
-        return coefficiency > 1 ? 1 : coefficiency
+        return coefficient > 1 ? 1 : coefficient
     }
 
     let totalDuration
