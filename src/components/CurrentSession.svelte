@@ -116,14 +116,14 @@
             </Column>
             <Column>
                 <span class="session-data">
-                    {timeElapsed} <span class="gray-data">({timeCoefficient}%)</span>
+                    {timeElapsed} <span class="secondary-stat">({timeCoefficient}%)</span>
                 </span>
             </Column>
             <Column>
                 <span class="session-data">
                     <span class="comment-icons"><ChatIcon /></span>
                     {session.comments.filter(c => c.type === 'comment').length}
-                    <span class="gray-data">({commentsPerHour}/h)</span> •
+                    <span class="secondary-stat">({commentsPerHour}/h)</span> •
                     <span class="comment-icons"><AttachmentIcon /></span>
                     {session.comments.filter(c => c.type === 'file').length}
                 </span>
@@ -177,7 +177,7 @@
         vertical-align: middle;
     }
 
-    .gray-data {
+    .secondary-stat {
         color: #666;
     }
 

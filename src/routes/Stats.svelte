@@ -41,15 +41,13 @@
             return
         }
 
-        devStats = req.data.map(s => {
-            return {
-                id: parseInt(s.Id),
-                developer: `${s.Prenom} ${s.Nom}`,
-                time: s.CumTemps,
-                comments: parseInt(s.CumCommentaires),
-                isCoordinator: s.EstCoordo === '1'
-            }
-        })
+        devStats = req.data.map(s => ({
+            id: parseInt(s.Id),
+            developer: `${s.Prenom} ${s.Nom}`,
+            time: s.CumTemps,
+            comments: parseInt(s.CumCommentaires),
+            isCoordinator: s.EstCoordo === '1'
+        }))
     }
 
     const getSessions = async () => {
@@ -60,12 +58,10 @@
         }
 
         personalSessions = req.data
-            .map(s => {
-                return {
-                    start: dayjs(s.Debut).unix(),
-                    end: s.Fin ? dayjs(s.Fin).unix() : dayjs().unix(),
-                }
-            })
+            .map(s => ({
+                start: dayjs(s.Debut).unix(),
+                end: s.Fin ? dayjs(s.Fin).unix() : dayjs().unix()
+            }))
             .filter(s => s.start >= personalStatsStartDate && s.start <= personalStatsEndDate || !personalStatsRange)
     }
 
@@ -153,7 +149,7 @@
                             <TooltipIcon tooltipText="Coordonnateur" icon={IdManagementIcon} direction="top" />
                         </span>
                     {/if}
-                {:else if cell.key === 'hours'}
+                {:else if cell.key === 'time'}
                     {calculateSecondsDuration(cell.value)}
                 {:else if cell.key === 'comments'}
                     <span class="left icons"><ChatIcon /></span>

@@ -71,7 +71,8 @@
     {/if}
     <p>
         Le serveur Jourvie ne permet normalement pas d'avoir plusieurs connexions actives.
-        Pour contourner cette restriction, vous pouvez utiliser la clé de connexion suivante à votre prochaine connexion:
+        Pour contourner cette restriction, vous pouvez utiliser la clé de connexion suivante
+        au lieu de votre matricule et mot de passe à votre prochaine connexion:
     </p>
     <CodeSnippet code={loginKey} type="multi" wrapText feedback="Copiée!" />
     <p class="margin-bottom"><span class="bold">Important:</span> N'utilisez pas plusieurs instances de Jourvie simultanément.</p>

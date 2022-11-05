@@ -3,6 +3,7 @@
     import { loadUserInfo } from './util/userInfoLoader'
 
     import './util/preventClose'
+    import './util/faviconChanger'
 
     let ready = false
 

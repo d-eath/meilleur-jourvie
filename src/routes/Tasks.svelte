@@ -1,5 +1,5 @@
 <script>
-    import { Button, DataTable, Tag, Toolbar, ToolbarContent, TooltipIcon, Loading } from 'carbon-components-svelte'
+    import { Button, DataTable, Tag, Toolbar, ToolbarContent, TooltipIcon, Loading, Toggle } from 'carbon-components-svelte'
 
     import AddIcon from 'carbon-icons-svelte/lib/Add.svelte'
     import EditIcon from 'carbon-icons-svelte/lib/Edit.svelte'
@@ -26,9 +26,11 @@
     ]
 
     let tasks = []
+    let filteredTasks = []
     let isLoaded = false
     let isModalOpen = false
     let canStartSession = true
+    let onlyShowActiveTasks = true
 
     let modalData = {
         id: null,
@@ -53,15 +55,13 @@
             return
         }
 
-        tasks = req.data.map(t => {
-            return {
-                id: parseInt(t.Id),
-                number: t.Numero,
-                title: t.Titre,
-                description: t.Description,
-                active: t.Statut === 'active'
-            }
-        })
+        tasks = req.data.map(t => ({
+            id: parseInt(t.Id),
+            number: t.Numero,
+            title: t.Titre,
+            description: t.Description,
+            active: t.Statut === 'active'
+        }))
     }
 
     const openNewTaskModal = () => {
@@ -113,8 +113,19 @@
 
     const updateTasks = async () => {
         await getTasks()
+        filterTasks()
 
         isLoaded = true
+    }
+
+    const filterTasks = () => {
+        filteredTasks = tasks.filter(t => {
+            if (onlyShowActiveTasks) {
+                return t.active
+            }
+
+            return true
+        })
     }
 
     subscribeIgnoreFirst(currentSession, updateTasks)
@@ -128,10 +139,20 @@
     <div class="task-list">
         <DataTable
             {headers}
-            rows={tasks}
+            rows={filteredTasks}
             title="Tâches du projet"
-            description={!get(userInfo).isCoordinator ? `Seuls les coordonnateurs peuvent créer ou modifier les tâches du projet.` : ''}
         >
+            <div slot="description">
+                {#if !get(userInfo).isCoordinator}
+                    Seuls les coordonnateurs peuvent créer ou modifier les tâches du projet.
+                {/if}
+                <Toggle
+                    labelA="Afficher uniquement les tâches actives"
+                    labelB="Afficher uniquement les tâches actives"
+                    bind:toggled={onlyShowActiveTasks}
+                    on:toggle={filterTasks}
+                />
+            </div>
             {#if get(userInfo).isCoordinator}
                 <Toolbar>
                     <ToolbarContent>
@@ -204,7 +225,7 @@
 
 <style>
     h1 {
-        margin-bottom: 32px;
+        margin-bottom: 24px;
     }
 
     .start-button :global(.bx--btn) {
