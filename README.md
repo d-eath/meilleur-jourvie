@@ -70,5 +70,3 @@ Par défaut, le mode développement écoute à l'adresse suivante: http://127.0.
 Vous pouvez faire un build production de l'application en exécutant `npm run build`.
 
 Le build se retrouvera dans le dossier `dist` du répertoire.
-
-*Il y a présentement un bogue où les images de l'application se retrouvent dans le mauvais dossier dans un build. Pour le moment, veuillez déplacer le dossier `dist/images` au dossier `dist/assets` après avoir effectué un build pour remédier ce problème.*
